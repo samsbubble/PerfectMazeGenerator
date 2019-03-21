@@ -1,7 +1,6 @@
 package app.controllers;
 
 import app.domainUI.AlertBox;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -15,12 +14,12 @@ public class ControllerGenerator extends Controller {
     @FXML Button btnGenerate;
     @FXML Label labelDeadEnd, labelLength, labelRiver, labelTurn;
     @FXML ComboBox<String> comboAlgorithms;
-    @FXML ComboBox<Integer> comboSize;
+    @FXML ComboBox<String> comboSize;
 
     @FXML
     public void initialize(){
         comboAlgorithms.setItems(observableArrayList("Recursive Backtracking Algorithm", "Prim's Algorithm", "Wilson's Algorithm"));
-        comboSize.setItems(observableArrayList(5, 10, 15, 20, 25, 50));
+        comboSize.setItems(observableArrayList("5", "10", "15", "20", "25", "50"));
     }
 
     @FXML
@@ -51,6 +50,8 @@ public class ControllerGenerator extends Controller {
     @FXML
     public void generate(){
         String algorithm = comboAlgorithms.getValue();
+        int dim = Integer.parseInt(comboSize.getValue());
+
 
         // Draw the maze
 

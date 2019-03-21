@@ -22,8 +22,8 @@ public enum Direction {
         return dir.directionY;
     }
 
-    public Direction getOpposite(Direction dir){
-        switch(dir) {
+    public Direction getOpposite(){
+        switch(this) {
             case EAST:
                 return WEST;
             case WEST:

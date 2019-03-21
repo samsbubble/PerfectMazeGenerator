@@ -8,9 +8,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Controller {
+class Controller {
 
-    public void changeScene(String fxmlFile) throws IOException {
+    void changeScene(String fxmlFile) throws IOException {
         Parent layout = FXMLLoader.load(getClass().getResource(fxmlFile));
         Stage window = Main.getWindow();
         window.setScene(new Scene(layout, 600, 400));
