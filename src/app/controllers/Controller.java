@@ -13,7 +13,7 @@ class Controller {
     void changeScene(String fxmlFile) throws IOException {
         Parent layout = FXMLLoader.load(getClass().getResource(fxmlFile));
         Stage window = Main.getWindow();
-        window.setScene(new Scene(layout, 600, 400));
+        window.setScene(new Scene(layout, 1000, 600));
         window.show();
     }
 

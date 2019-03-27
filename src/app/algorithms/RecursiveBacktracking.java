@@ -2,11 +2,13 @@ package app.algorithms;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class RecursiveBacktracking {
 
     private int dimX, dimY;
     private Maze maze;
+    private List<Solution> solutions;
 
     public RecursiveBacktracking(int dimX, int dimY){
         maze = new Maze(dimX, dimY);
@@ -15,6 +17,7 @@ public class RecursiveBacktracking {
     public void generateMaze() {
         int currentX = (int) Math.random() * dimX;
         int currentY = (int) Math.random() * dimY;
+        solutions = new ArrayList<>();
         generateRecursiveBacktracking(currentX, currentY);
     }
 
@@ -32,6 +35,7 @@ public class RecursiveBacktracking {
                 maze.setTile(currentX, currentY, dir);
                 maze.setTile(newX, newY, dir.getOpposite());
                 maze.setVisited(currentX, currentY);
+                maze.setSolution(currentX, currentY, dir);
                 generateRecursiveBacktracking(newX, newY);
             }
         }
@@ -42,4 +46,7 @@ public class RecursiveBacktracking {
         return newX >= 0 && newX < dimX && newY >= 0 && newY < dimY && maze.isVisited(newX, newY).equals(false);
     }
 
+    public List<Solution> getSolution() {
+            return null;
+    }
 }

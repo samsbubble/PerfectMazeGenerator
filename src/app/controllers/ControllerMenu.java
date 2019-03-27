@@ -20,7 +20,7 @@ public class ControllerMenu extends Controller {
         Parent layoutMenu = FXMLLoader.load(getClass().getResource("layoutMenu.fxml"));
         window = Main.getWindow();
         window.setTitle("Maze Generator");
-        window.setScene(new Scene(layoutMenu, 600, 400));
+        window.setScene(new Scene(layoutMenu, 1000, 600));
         window.show();
     }
 
