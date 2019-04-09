@@ -1,6 +1,4 @@
-package app.algorithms;
-
-import javafx.scene.Scene;
+package app.logic.domain;
 
 import java.util.ArrayList;
 
@@ -14,12 +12,12 @@ public enum Direction {
         this.directionY = directionY;
     }
 
-    public int getDirectionX(Direction dir){
-        return dir.directionX;
+    public int getDirectionX(){
+        return this.directionX;
     }
 
-    public int getDirectionY(Direction dir){
-        return dir.directionY;
+    public int getDirectionY(){
+        return this.directionY;
     }
 
     public Direction getOpposite(){

@@ -1,4 +1,4 @@
-package app.algorithms.Tracking;
+package app.logic.Tracking;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,14 @@ public class OperationTracker {
 
     public void add(Operation op){
         operations.add(op);
+    }
+
+    public int size(){
+        return operations.size();
+    }
+
+    public Operation get(int i){
+        return operations.get(i);
     }
 
 }
