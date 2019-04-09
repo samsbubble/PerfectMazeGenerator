@@ -31,6 +31,7 @@ public class ControllerGenerator extends Controller {
     private int eventIndex = 0;
     private int conversion = 0;
     private int currentX = -1, currentY = -1;
+    private Algorithm algo = new Algorithm();
 
     @FXML
     public void initialize(){
@@ -69,14 +70,17 @@ public class ControllerGenerator extends Controller {
 
     @FXML
     public void generate(){
-        String algorithm;
-        RecursiveBacktracking maze;
-        int dim;
+        String algorithm = "";
+        int dim = 0;
+        OperationTracker operations = new OperationTracker();
         try {
             algorithm = comboAlgorithms.getValue();
             dim = Integer.parseInt(comboSize.getValue());
             gc = canvas.getGraphicsContext2D();
             conversion = (int) canvas.getHeight()/dim;
+        } catch (Exception e ){
+            AlertBox.display("Warning", "You haven't chosen a dimension or an algorithm yet.");
+        }
 
             // Clear canvas of any previously drawings
             clearCanvas();
@@ -85,27 +89,52 @@ public class ControllerGenerator extends Controller {
             initialiseMaze(dim, conversion);
 
             // Get the solution
-            maze = new RecursiveBacktracking(dim, dim);
-            maze.generateMaze();
-            OperationTracker operations = maze.getOpTracker();
+        try {
+            algo.generateMaze(dim, dim);
+            algo.runAlgorithm(algorithm);
 
-            for (int i = 0; i < operations.size(); i++){
-                System.out.println(operations.get(i));
-            }
+            operations = algo.getOperationTracker();
 
-            // Animate the maze
             eventIndex = 0;
             Timer myTimer = new Timer();
+            OperationTracker finalOperations = operations;
             TimerTask myTask = new TimerTask() {
                 @Override
                 public void run() {
-                    if (eventIndex >= operations.size()) {
+                    if (eventIndex >= finalOperations.size()) {
                         gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2, conversion/2);
                         myTimer.cancel();
                         return;
                     }
                     // Draw next step
-                    drawOperation(operations.get(eventIndex));
+                    drawOperation(finalOperations.get(eventIndex));
+                    eventIndex++;
+                }
+            };
+            myTimer.scheduleAtFixedRate(myTask, 0L, 200L);
+        }catch (Exception e) {
+            AlertBox.display("Warning", "Something went wrong in the generation of the maze.");
+        }
+
+        /*for (int i = 0; i < operations.size(); i++){
+            System.out.println(operations.get(i));
+        }*/
+
+        /*try {
+            // Animate the maze
+            eventIndex = 0;
+            Timer myTimer = new Timer();
+            OperationTracker finalOperations = operations;
+            TimerTask myTask = new TimerTask() {
+                @Override
+                public void run() {
+                    if (eventIndex >= finalOperations.size()) {
+                        gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2, conversion/2);
+                        myTimer.cancel();
+                        return;
+                    }
+                    // Draw next step
+                    drawOperation(finalOperations.get(eventIndex));
                     eventIndex++;
                 }
             };
@@ -115,11 +144,11 @@ public class ControllerGenerator extends Controller {
 
 
         } catch (Exception e ){
-            AlertBox.display("Warning", "You haven't chosen a dimension or an algorithm yet.");
-        }
+            AlertBox.display("Warning", "Something went wrong in the animation of the maze.");
+        }*/
     }
 
-    public void drawOperation(Operation op){
+    private void drawOperation(Operation op){
         if (op instanceof Move) {
             currentX = ((Move) op).getxCoordinate();
             currentY = ((Move) op).getyCoordinate();

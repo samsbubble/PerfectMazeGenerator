@@ -10,34 +10,22 @@ import app.logic.domain.Maze;
 import java.util.ArrayList;
 
 public class Prim extends Algorithm{
-    int dimX, dimY;
-    public OperationTracker opTracker;
-    Maze maze;
+    private OperationTracker opTracker;
+    private Maze maze;
     private  ArrayList<Cell> frontiers;
-    private int currentX, currentY;
 
 
-    public Prim(int dimX, int dimY){
-        this.dimX = dimX;
-        this.dimY = dimY;
-        maze = new Maze(dimX, dimY);
+    Prim(Maze maze){
+        this.maze = maze;
         frontiers = new ArrayList<>();
         opTracker = new OperationTracker();
     }
 
-
-    public void generateMaze() {
-        currentX = (int) (Math.random() * dimX);
-        currentY = (int) (Math.random() * dimY);
-        runPrim();
-    }
-
-    public OperationTracker getOpTracker(){
+    OperationTracker getOpTracker(){
         return opTracker;
     }
 
-
-    public void runPrim(){
+    void runPrim(int currentX, int currentY){
         Cell nextCell;
         opTracker.add(new Move(currentX, currentY));
         do{
@@ -80,7 +68,7 @@ public class Prim extends Algorithm{
         }
     }
 
-    Cell getRandom(ArrayList<Cell> neighbours){
+    private Cell getRandom(ArrayList<Cell> neighbours){
         if(neighbours.size() == 1){
             return neighbours.get(0);
         }

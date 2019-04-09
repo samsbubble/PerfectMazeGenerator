@@ -21,6 +21,14 @@ public class Maze {
         }
     }
 
+    public int getDimX(){
+        return dimX;
+    }
+
+    public int getDimY(){
+        return dimY;
+    }
+
     public void setVisited(int posX, int posY){
         cells[posX][posY].setVisited();
     }
