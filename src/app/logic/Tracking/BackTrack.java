@@ -1,4 +1,4 @@
-package app.algorithms.Tracking;
+package app.logic.Tracking;
 
 public class BackTrack extends Operation {
 
@@ -7,6 +7,14 @@ public class BackTrack extends Operation {
     public BackTrack(int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+    }
+
+    public int getxCoordinate() {
+        return xCoordinate;
+    }
+
+    public int getyCoordinate() {
+        return yCoordinate;
     }
 
     @Override

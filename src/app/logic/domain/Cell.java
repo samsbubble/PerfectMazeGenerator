@@ -1,16 +1,18 @@
-package app.algorithms;
+package app.logic.domain;
+
+import app.logic.domain.Direction;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Tile {
+public class Cell {
 
     private int xCoordinate, yCoordinate;
     private Map<Direction, Boolean> walls;  // {NORTH, EAST, SOUTH, WEST}
     private Boolean visited;
 
     // List of the four walls
-    Tile(int xCoordinate, int yCoordinate){
+    Cell(int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
 
@@ -23,11 +25,11 @@ public class Tile {
         this.visited = false;
     }
 
-    Boolean isVisited(){
+    public Boolean isVisited(){
         return this.visited;
     }
 
-    void setVisited(){
+    public void setVisited(){
         this.visited = true;
     }
 

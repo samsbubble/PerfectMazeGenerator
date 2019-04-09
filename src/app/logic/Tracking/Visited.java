@@ -1,4 +1,4 @@
-package app.algorithms.Tracking;
+package app.logic.Tracking;
 
 public class Visited extends Operation {
 

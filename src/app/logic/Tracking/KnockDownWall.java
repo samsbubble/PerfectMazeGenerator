@@ -1,10 +1,10 @@
-package app.algorithms.Tracking;
+package app.logic.Tracking;
 
-import app.algorithms.Direction;
+import app.logic.domain.Direction;
 
 public class KnockDownWall extends Operation {
 
-    Direction wall;
+    private Direction wall;
 
     public KnockDownWall(int x1, int y1, int x2, int y2){
         if (y2 == y1 + 1)
@@ -15,6 +15,10 @@ public class KnockDownWall extends Operation {
             wall = Direction.EAST;
         if (x2 == x1 - 1)
             wall = Direction.WEST;
+    }
+
+    public Direction getWall() {
+        return wall;
     }
 
     @Override

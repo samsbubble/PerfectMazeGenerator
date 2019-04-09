@@ -1,8 +1,11 @@
 package app.controllers;
 
-import app.algorithms.RecursiveBacktracking;
-import app.algorithms.Solution;
+import app.logic.Algorithm;
+import app.logic.Prim;
+import app.logic.RecursiveBacktracking;
 import app.domainUI.AlertBox;
+import app.logic.Tracking.*;
+import com.sun.org.apache.regexp.internal.RE;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,6 +14,8 @@ import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -22,7 +27,10 @@ public class ControllerGenerator extends Controller {
     @FXML ComboBox<String> comboAlgorithms;
     @FXML ComboBox<String> comboSize;
     @FXML Canvas canvas;
-    private GraphicsContext gcAdd, gcRemove;
+    private GraphicsContext gc;
+    private int eventIndex = 0;
+    private int conversion = 0;
+    private int currentX = -1, currentY = -1;
 
     @FXML
     public void initialize(){
@@ -55,16 +63,20 @@ public class ControllerGenerator extends Controller {
         AlertBox.display("Warning", "Not Implemented yet.");
     }
 
+
+    // When choosing a grid size, display immediately.
+
+
     @FXML
     public void generate(){
         String algorithm;
+        RecursiveBacktracking maze;
         int dim;
         try {
             algorithm = comboAlgorithms.getValue();
             dim = Integer.parseInt(comboSize.getValue());
-            gcAdd = canvas.getGraphicsContext2D();
-            gcRemove = canvas.getGraphicsContext2D();
-            double conversion = canvas.getHeight()/dim;
+            gc = canvas.getGraphicsContext2D();
+            conversion = (int) canvas.getHeight()/dim;
 
             // Clear canvas of any previously drawings
             clearCanvas();
@@ -73,17 +85,31 @@ public class ControllerGenerator extends Controller {
             initialiseMaze(dim, conversion);
 
             // Get the solution
-            RecursiveBacktracking maze = new RecursiveBacktracking(dim, dim);
+            maze = new RecursiveBacktracking(dim, dim);
             maze.generateMaze();
+            OperationTracker operations = maze.getOpTracker();
 
-            for (int i = 0; i < maze.opTracker.operations.size(); i++){
-                System.out.println(maze.opTracker.operations.get(i));
+            for (int i = 0; i < operations.size(); i++){
+                System.out.println(operations.get(i));
             }
 
-            //List<Solution> solutionList = maze.getSolution();
-
             // Animate the maze
-            //animateMaze(solutionList, conversion);
+            eventIndex = 0;
+            Timer myTimer = new Timer();
+            TimerTask myTask = new TimerTask() {
+                @Override
+                public void run() {
+                    if (eventIndex >= operations.size()) {
+                        gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2, conversion/2);
+                        myTimer.cancel();
+                        return;
+                    }
+                    // Draw next step
+                    drawOperation(operations.get(eventIndex));
+                    eventIndex++;
+                }
+            };
+            myTimer.scheduleAtFixedRate(myTask, 0L, 200L);
 
             // Calculate and write out the properties
 
@@ -93,54 +119,79 @@ public class ControllerGenerator extends Controller {
         }
     }
 
-
-    private void animateMaze(List<Solution> solutionList, double con) throws InterruptedException {
-        gcRemove.setStroke(Color.WHITE);
-        gcRemove.setLineWidth(1);
-
-        Solution move;
-        for (int i = 0; i < solutionList.size(); i++){
-            move = solutionList.get(i);
-            switch (move.getDirection()){
-                case NORTH:
-                    gcRemove.strokeLine((move.getxCoordinate()*con), (move.getyCoordinate()*con), (move.getxCoordinate()*con) + con, (move.getyCoordinate()*con));
-                    break;
-                case SOUTH:
-                    gcRemove.strokeLine((move.getxCoordinate()*con), (move.getyCoordinate()*con) + con, (move.getxCoordinate()*con) + con, (move.getyCoordinate()*con) + con);
+    public void drawOperation(Operation op){
+        if (op instanceof Move) {
+            currentX = ((Move) op).getxCoordinate();
+            currentY = ((Move) op).getyCoordinate();
+            gc.fillRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2, conversion/2);
+        }
+        else if (op instanceof BackTrack) {
+            gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2, conversion/2);
+            currentX = ((BackTrack) op).getxCoordinate();
+            currentY = ((BackTrack) op).getyCoordinate();
+        }
+        else if (op instanceof KnockDownWall) {
+            switch (((KnockDownWall) op).getWall()){
+                case EAST:
+                    gc.clearRect((currentX+1)*conversion - 1,
+                            (currentY)*conversion + 1,
+                            3, conversion-3);
+                    /*gc.clearRect((currentX+1)*conversion - 1,
+                                 (currentY)*conversion + 1,
+                            3, conversion-2);*/
                     break;
                 case WEST:
-                    gcRemove.strokeLine((move.getxCoordinate()*con), (move.getyCoordinate()*con), (move.getxCoordinate()*con), (move.getyCoordinate()*con) + con);
+                    gc.clearRect((currentX)*conversion - 1,
+                            (currentY)*conversion + 1,
+                            3, conversion-3);
+                    /*gc.clearRect((currentX)*conversion - 1,
+                            (currentY)*conversion + 1,
+                            3, conversion-2);*/
                     break;
-                case EAST:
-                    gcRemove.strokeLine((move.getxCoordinate()*con) + con, (move.getyCoordinate()*con), (move.getxCoordinate()*con) + con, (move.getyCoordinate()*con) + con);
+                case NORTH:
+                    gc.clearRect((currentX)*conversion + 2,
+                            (currentY)*conversion - 2,
+                            conversion-3, 3);
+                    /*gc.clearRect((currentX)*conversion + 2,
+                            (currentY)*conversion - 2,
+                            conversion-2, 3);*/
+                    break;
+                case SOUTH:
+                    gc.clearRect((currentX)*conversion + 2,
+                            (currentY+1)*conversion - 2,
+                            conversion-3, 3);
+                    /*gc.clearRect((currentX)*conversion + 2,
+                            (currentY+1)*conversion - 2,
+                            conversion-2, 3);*/
                     break;
             }
         }
     }
 
+
     private void clearCanvas(){
         double dim = canvas.getHeight();
-        gcAdd.clearRect(0,0, dim, dim);
+        gc.clearRect(0,0, dim, dim);
     }
 
 
     private void initialiseMaze(int dim, double conversion){
         double height = canvas.getHeight();
 
-        gcAdd.setStroke(Color.BLACK);
-        gcAdd.setLineWidth(1);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(2);
+        gc.setFill(Color.DEEPPINK);
 
         // Draw the grid
         // Drawing the vertical lines
         for (int i = 0; i < dim+1; i++){
-            gcAdd.strokeLine(i*conversion,0, i*conversion, height);
+            gc.strokeLine(i*conversion,0, i*conversion, height);
         }
 
         // Drawing the horizontal lines
         for (int i = 0; i < dim+1; i++){
-            gcAdd.strokeLine(0,i*conversion, height, i*conversion);
+            gc.strokeLine(0,i*conversion, height, i*conversion);
         }
-
     }
 
 }
