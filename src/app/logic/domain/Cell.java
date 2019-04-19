@@ -12,7 +12,7 @@ public class Cell {
     private Boolean visited;
 
     // List of the four walls
-    Cell(int xCoordinate, int yCoordinate){
+    public Cell(int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
 
@@ -43,5 +43,23 @@ public class Cell {
 
     public void breakDownWall(Direction dir) {
         this.walls.put(dir, false);
+    }
+
+    public int getNumberOfWalls() {
+        int numberOfWalls = 0;
+        if(walls.get(Direction.NORTH))
+            numberOfWalls++;
+        if(walls.get(Direction.EAST))
+            numberOfWalls++;
+        if(walls.get(Direction.SOUTH))
+            numberOfWalls++;
+        if(walls.get(Direction.WEST))
+            numberOfWalls++;
+
+        return numberOfWalls;
+    }
+
+    public boolean getWall(Direction dir) {
+        return walls.get(dir);
     }
 }

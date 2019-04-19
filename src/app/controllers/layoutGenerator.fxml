@@ -11,16 +11,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ControllerGenerator">
+<AnchorPane prefHeight="840.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ControllerGenerator">
     <children>
-        <MenuBar AnchorPane.bottomAnchor="370.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <MenuBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="1050.0" AnchorPane.bottomAnchor="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem fx:id="menuitemsavefile" mnemonicParsing="false" onAction="#saveFile" text="Save file" />
                         <MenuItem fx:id="menuitemsavevideo" mnemonicParsing="false" onAction="#saveVideo" text="Export generation" />
                         <MenuItem fx:id="menuitemclose" mnemonicParsing="false" onAction="#closeWindow" text="Close" />
-                  <MenuItem fx:id="btnback" mnemonicParsing="false" onAction="#goToMenu" text="Back to menu" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
@@ -30,30 +29,31 @@
                 </Menu>
             </menus>
         </MenuBar>
-        <SplitPane dividerPositions="0.5568561872909699" layoutY="30.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+        <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="820.0" prefWidth="1120.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
             <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                    <children>
-                        <Canvas fx:id="canvas" height="300.0" layoutX="14.0" layoutY="34.0" width="300.0" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="34.0" />
-                    </children>
+                <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="800.0">
+               <children>
+                        <Canvas fx:id="canvas" height="780.0" layoutX="10.0" layoutY="10.0" nodeOrientation="INHERIT" width="780.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+               </children>
                 </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="842.0" prefWidth="290.0" SplitPane.resizableWithParent="false">
                     <children>
-                        <ComboBox fx:id="comboAlgorithms" editable="true" layoutX="23.0" layoutY="14.0" prefHeight="39.0" prefWidth="215.0" promptText="Choose an algorithm" />
-                        <Button fx:id="btnGenerate" layoutX="66.0" layoutY="130.0" mnemonicParsing="false" onAction="#generate" prefHeight="27.0" prefWidth="130.0" text="Generate" />
-                        <Label layoutX="25.0" layoutY="176.0" text="Properties">
+                        <ComboBox fx:id="comboAlgorithms" editable="true" layoutX="38.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="39.0" prefWidth="215.0" promptText="Choose an algorithm" />
+                        <Button fx:id="btnGenerate" layoutX="84.0" layoutY="146.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#generate" prefHeight="27.0" prefWidth="124.0" text="Generate  maze" />
+                        <Label layoutX="15.0" layoutY="288.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Properties of the maze: ">
                             <font>
                                 <Font name="System Bold" size="13.0" />
                             </font></Label>
-                        <Label layoutX="31.0" layoutY="201.0" text="Dead ends:" />
-                        <Label layoutX="31.0" layoutY="237.0" text="Length of solution:" />
-                        <Label layoutX="31.0" layoutY="273.0" text="River factor:" />
-                        <Label layoutX="31.0" layoutY="305.0" text="Turns:" />
-                        <Label fx:id="labelDeadEnd" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="197.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
-                        <Label fx:id="labelLength" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="233.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
-                        <Label fx:id="labelRiver" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="269.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
-                        <Label fx:id="labelTurn" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="301.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
-                  <ComboBox fx:id="comboSize" editable="true" layoutX="23.0" layoutY="69.0" prefHeight="39.0" prefWidth="215.0" promptText="Choose size of maze" />
+                        <Label layoutX="25.0" layoutY="325.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Dead ends:" />
+                        <Label layoutX="25.0" layoutY="405.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Length of solution:" />
+                        <Label layoutX="25.0" layoutY="365.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="River factor:" />
+                        <Label layoutX="25.0" layoutY="450.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Turns on solution:" />
+                        <Label fx:id="labelDeadEnd" alignment="CENTER_RIGHT" layoutX="163.0" layoutY="321.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="90.0" text="-" />
+                        <Label fx:id="labelLength" alignment="CENTER_RIGHT" layoutX="163.0" layoutY="363.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="90.0" text="-" />
+                        <Label fx:id="labelRiver" alignment="CENTER_RIGHT" layoutX="163.0" layoutY="408.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="90.0" text="-" />
+                        <Label fx:id="labelTurn" alignment="CENTER_RIGHT" layoutX="163.0" layoutY="446.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="90.0" text="-" />
+                  <ComboBox fx:id="comboSize" editable="true" layoutX="39.0" layoutY="81.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="39.0" prefWidth="215.0" promptText="Choose size of maze" />
+                  <Button fx:id="btnSolution" layoutX="83.0" layoutY="495.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showSolution" prefHeight="27.0" prefWidth="124.0" text="Show solution" />
                     </children>
                 </AnchorPane>
             </items>

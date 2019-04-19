@@ -8,28 +8,19 @@ import java.util.ArrayList;
 
 
 public class RecursiveBacktracking extends Algorithm {
-    int dimX, dimY;
-    public OperationTracker opTracker;
-    Maze maze;
+    private OperationTracker opTracker;
+    private Maze maze;
 
-    public RecursiveBacktracking(int dimX, int dimY){
-        this.dimX = dimX;
-        this.dimY = dimY;
+    RecursiveBacktracking(Maze maze){
         opTracker = new OperationTracker();
-        maze = new Maze(dimX, dimY);
+        this.maze = maze;
     }
 
-    public void generateMaze() {
-        int currentX = (int) (Math.random() * dimX);
-        int currentY = (int) (Math.random() * dimY);
-        runRBT(currentX, currentY);
-    }
-
-    public OperationTracker getOpTracker(){
+    OperationTracker getOpTracker(){
         return opTracker;
     }
 
-    public void runRBT(int currentX, int currentY){
+    void runRBT(int currentX, int currentY){
         // Track move
         opTracker.add(new Move(currentX, currentY));
 
@@ -43,7 +34,7 @@ public class RecursiveBacktracking extends Algorithm {
             neighbours = maze.getPossibleNeighbours(currentX, currentY);
             if(neighbours.isEmpty())
                 break;
-            nextCell = getRandom(neighbours);
+            nextCell = Method.getRandom(neighbours);
             // Break down wall and track the operation
             maze.breakDownWall(maze.getTile(currentX, currentY), nextCell);
             opTracker.add(new KnockDownWall(currentX, currentY, nextCell.getXCoordinate(), nextCell.getYCoordinate()));
@@ -52,14 +43,6 @@ public class RecursiveBacktracking extends Algorithm {
             // Track backtracking operation
             opTracker.add(new BackTrack(currentX, currentY));
         } while(true);
-    }
-
-    Cell getRandom(ArrayList<Cell> neighbours){
-        if(neighbours.size() == 1){
-            return neighbours.get(0);
-        }
-        int index = (int) (Math.random() * neighbours.size());
-        return neighbours.get(index);
     }
 
 }
