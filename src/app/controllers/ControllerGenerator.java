@@ -1,19 +1,21 @@
 package app.controllers;
 
 import app.logic.Algorithm;
-import app.logic.Prim;
-import app.logic.RecursiveBacktracking;
 import app.domainUI.AlertBox;
 import app.logic.Tracking.*;
-import com.sun.org.apache.regexp.internal.RE;
+import app.logic.domain.Cell;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,7 +24,7 @@ import static javafx.collections.FXCollections.observableArrayList;
 public class ControllerGenerator extends Controller {
 
     @FXML MenuItem menuitemsavefile, menuitemsavevideo, menuitemclose, menuitemabout;
-    @FXML Button btnGenerate;
+    @FXML Button btnGenerate, btnSolution;
     @FXML Label labelDeadEnd, labelLength, labelRiver, labelTurn;
     @FXML ComboBox<String> comboAlgorithms;
     @FXML ComboBox<String> comboSize;
@@ -32,6 +34,7 @@ public class ControllerGenerator extends Controller {
     private int conversion = 0;
     private int currentX = -1, currentY = -1;
     private Algorithm algo = new Algorithm();
+    private ArrayList<Cell> mazeSolution;
 
     @FXML
     public void initialize(){
@@ -72,7 +75,6 @@ public class ControllerGenerator extends Controller {
     public void generate(){
         String algorithm = "";
         int dim = 0;
-        OperationTracker operations = new OperationTracker();
         try {
             algorithm = comboAlgorithms.getValue();
             dim = Integer.parseInt(comboSize.getValue());
@@ -82,118 +84,114 @@ public class ControllerGenerator extends Controller {
             AlertBox.display("Warning", "You haven't chosen a dimension or an algorithm yet.");
         }
 
-            // Clear canvas of any previously drawings
-            clearCanvas();
+        // Clear canvas of any previously drawings
+        clearCanvas();
 
-            // Draw the maze skeleton
-            initialiseMaze(dim, conversion);
+        // Draw the maze skeleton
+        initialiseMaze(dim, conversion);
 
-            // Get the solution
+        // Get the maze generated
         try {
             algo.generateMaze(dim, dim);
             algo.runAlgorithm(algorithm);
 
-            operations = algo.getOperationTracker();
+            OperationTracker operations = algo.getOperationTracker();
 
             eventIndex = 0;
             Timer myTimer = new Timer();
-            OperationTracker finalOperations = operations;
             TimerTask myTask = new TimerTask() {
                 @Override
                 public void run() {
-                    if (eventIndex >= finalOperations.size()) {
-                        gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2, conversion/2);
+                    if (eventIndex >= operations.size()) {
+                        gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2.0, conversion/2.0);
+
                         myTimer.cancel();
                         return;
                     }
                     // Draw next step
-                    drawOperation(finalOperations.get(eventIndex));
+                    drawOperation(operations.get(eventIndex));
                     eventIndex++;
                 }
             };
-            myTimer.scheduleAtFixedRate(myTask, 0L, 200L);
+            myTimer.scheduleAtFixedRate(myTask, 0L, (10000L/operations.size()));
         }catch (Exception e) {
             AlertBox.display("Warning", "Something went wrong in the generation of the maze.");
         }
 
-        /*for (int i = 0; i < operations.size(); i++){
-            System.out.println(operations.get(i));
-        }*/
+        // Calculate solution to the maze and the properties
+        try {
+            mazeSolution = algo.getSolution();
+        } catch (Exception e){
+            AlertBox.display("Warning", "The solution could not be found.");
+        }
 
-        /*try {
-            // Animate the maze
-            eventIndex = 0;
-            Timer myTimer = new Timer();
-            OperationTracker finalOperations = operations;
-            TimerTask myTask = new TimerTask() {
-                @Override
-                public void run() {
-                    if (eventIndex >= finalOperations.size()) {
-                        gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2, conversion/2);
-                        myTimer.cancel();
-                        return;
-                    }
-                    // Draw next step
-                    drawOperation(finalOperations.get(eventIndex));
-                    eventIndex++;
-                }
-            };
-            myTimer.scheduleAtFixedRate(myTask, 0L, 200L);
-
-            // Calculate and write out the properties
+        labelDeadEnd.setText(String.valueOf( algo.getNumberOfDeadEnds() ));
+        labelRiver.setText(String.valueOf( algo.getRiverFactor() ));
+        labelLength.setText(String.valueOf( algo.lenghtOfSolution() ));
+        labelTurn.setText(String.valueOf( algo.getNumberOfTurnsInSolution() ));
+    }
 
 
-        } catch (Exception e ){
-            AlertBox.display("Warning", "Something went wrong in the animation of the maze.");
-        }*/
+    public void showSolution() {
+        // Draw the solution on the canvas
+        int xCoordinate, yCoordinate, nextXCoordinate, nextYCoordinate;
+
+        for (int i = 0; i < mazeSolution.size()-1; i++) {
+            xCoordinate = mazeSolution.get(i).getXCoordinate();
+            yCoordinate = mazeSolution.get(i).getYCoordinate();
+
+            nextXCoordinate = mazeSolution.get(i + 1).getXCoordinate();
+            nextYCoordinate = mazeSolution.get(i + 1).getYCoordinate();
+
+            gc.setStroke(Color.BLUE);
+            gc.strokeLine((xCoordinate + 0.5) * conversion, (yCoordinate + 0.5) * conversion,
+                    (nextXCoordinate + 0.5) * conversion, (nextYCoordinate + 0.5) * conversion);
+            gc.setStroke(Color.BLACK);
+        }
     }
 
     private void drawOperation(Operation op){
         if (op instanceof Move) {
             currentX = ((Move) op).getxCoordinate();
             currentY = ((Move) op).getyCoordinate();
-            gc.fillRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2, conversion/2);
+            gc.fillRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2.0, conversion/2.0);
         }
         else if (op instanceof BackTrack) {
-            gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2, conversion/2);
+            gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2.0, conversion/2.0);
             currentX = ((BackTrack) op).getxCoordinate();
             currentY = ((BackTrack) op).getyCoordinate();
         }
         else if (op instanceof KnockDownWall) {
             switch (((KnockDownWall) op).getWall()){
                 case EAST:
-                    gc.clearRect((currentX+1)*conversion - 1,
-                            (currentY)*conversion + 1,
+                    gc.clearRect((((KnockDownWall) op).getCurrentX()+1)*conversion - 1,
+                            (((KnockDownWall) op).getCurrentY())*conversion + 1,
                             3, conversion-3);
-                    /*gc.clearRect((currentX+1)*conversion - 1,
-                                 (currentY)*conversion + 1,
-                            3, conversion-2);*/
                     break;
                 case WEST:
-                    gc.clearRect((currentX)*conversion - 1,
-                            (currentY)*conversion + 1,
+                    gc.clearRect((((KnockDownWall) op).getCurrentX())*conversion - 1,
+                            (((KnockDownWall) op).getCurrentY())*conversion + 1,
                             3, conversion-3);
-                    /*gc.clearRect((currentX)*conversion - 1,
-                            (currentY)*conversion + 1,
-                            3, conversion-2);*/
                     break;
                 case NORTH:
-                    gc.clearRect((currentX)*conversion + 2,
-                            (currentY)*conversion - 2,
+                    gc.clearRect((((KnockDownWall) op).getCurrentX())*conversion + 2,
+                            (((KnockDownWall) op).getCurrentY())*conversion - 2,
                             conversion-3, 3);
-                    /*gc.clearRect((currentX)*conversion + 2,
-                            (currentY)*conversion - 2,
-                            conversion-2, 3);*/
                     break;
                 case SOUTH:
-                    gc.clearRect((currentX)*conversion + 2,
-                            (currentY+1)*conversion - 2,
+                    gc.clearRect((((KnockDownWall) op).getCurrentX())*conversion + 2,
+                            (((KnockDownWall) op).getCurrentY()+1)*conversion - 2,
                             conversion-3, 3);
-                    /*gc.clearRect((currentX)*conversion + 2,
-                            (currentY+1)*conversion - 2,
-                            conversion-2, 3);*/
                     break;
             }
+        }
+        else if (op instanceof UnMark) {
+            gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2.0, conversion/2.0);
+            currentX = ((UnMark) op).getxCoordinate();
+            currentY = ((UnMark) op).getyCoordinate();
+        }
+        else if (op instanceof AddFrontier) {
+            gc.fillRect((((AddFrontier) op).getxCoordinate()+0.24)*conversion, (((AddFrontier) op).getyCoordinate()+0.24)*conversion, conversion/2, conversion/2);
         }
     }
 

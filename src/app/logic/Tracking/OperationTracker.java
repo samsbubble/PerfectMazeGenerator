@@ -19,4 +19,7 @@ public class OperationTracker {
         return operations.get(i);
     }
 
+    public void clear() {
+        operations.clear();
+    }
 }

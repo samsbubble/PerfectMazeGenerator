@@ -3,13 +3,14 @@ package app.logic;
 import app.logic.Tracking.*;
 import app.logic.domain.Cell;
 import app.logic.domain.Maze;
-
 import java.util.ArrayList;
 
 public class Algorithm {
-    int dimX, dimY;
-    OperationTracker operationTracker;
-    Maze maze;
+    private int dimX, dimY;
+    private OperationTracker operationTracker;
+    private Maze maze;
+    private ArrayList<Cell> mazeSolution;
+    private Cell startingCell, endingCell;
 
     public Algorithm(){}
 
@@ -17,6 +18,9 @@ public class Algorithm {
         this.dimX = dimX;
         this.dimY = dimY;
         maze = new Maze(dimX, dimY);
+        operationTracker = new OperationTracker();
+        startingCell = new Cell(0,0);
+        endingCell = new Cell(dimX-1, dimY-1);
     }
 
     public void runAlgorithm(String algo){
@@ -34,12 +38,104 @@ public class Algorithm {
                 prim.runPrim(currentX, currentY);
                 this.operationTracker = prim.getOpTracker();
                 break;
+            case "Wilson's Algorithm":
+                Wilson wilson = new Wilson(maze);
+                wilson.runWilson(currentX, currentY);
+                this.operationTracker = wilson.getOpTracker();
+                for ( int i = 0; i < operationTracker.size(); i++){
+                    System.out.println(operationTracker.get(i));
+                }
+                break;
         }
+    }
+
+    public void resetOperationTracker(){
+        operationTracker.clear();
     }
 
     public OperationTracker getOperationTracker(){
         return this.operationTracker;
     }
 
+
+    private boolean calculateSolutionToMaze(Cell prevCell, Cell curCell){
+        mazeSolution.add(maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate()));
+
+        // Check if we are done
+        if(curCell.getXCoordinate() == endingCell.getXCoordinate() && curCell.getYCoordinate() == endingCell.getYCoordinate()){
+            return true;
+        }
+
+        for (Cell next
+                : maze.getPossiblePaths
+                (
+                        prevCell == null ? null : maze.getTile(prevCell.getXCoordinate(), prevCell.getYCoordinate()),
+                        maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate())
+                )
+            )
+        {
+            if(calculateSolutionToMaze(maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate()), next))
+                return true;
+
+            mazeSolution.remove(next);
+        }
+
+        return false;
+    }
+
+
+    public ArrayList<Cell> getSolution() throws Exception {
+        mazeSolution = new ArrayList<>();
+        if (calculateSolutionToMaze(null, startingCell))
+            return mazeSolution;
+        else
+            throw new Exception("Error in solution");
+    }
+
+    public int getNumberOfDeadEnds() {
+        // Calculate the number of dead ends - cells with only one opening - three walls
+        int deadEnds = 0;
+        Cell cell;
+
+        for (int i = 0; i < maze.getDimX(); i++) {
+            for (int j = 0; j < maze.getDimY(); j++) {
+                cell = maze.getTile(i, j);
+                if (cell.getNumberOfWalls() == 3)
+                    deadEnds++;
+            }
+        }
+        return deadEnds;
+    }
+
+    public int getRiverFactor() {
+        // Calculate the number of rivers - cells with three openings - one wall
+        int riverFactor = 0;
+        Cell cell;
+
+        for (int i = 0; i < maze.getDimX(); i++) {
+            for (int j = 0; j < maze.getDimY(); j++) {
+                cell = maze.getTile(i, j);
+                if (cell.getNumberOfWalls() == 1)
+                    riverFactor++;
+            }
+        }
+        return riverFactor;
+    }
+
+    public int lenghtOfSolution() {
+        // Calculate the length of the solution
+        return mazeSolution.size();
+    }
+
+    public int getNumberOfTurnsInSolution() {
+        // Calculate the number of turns in the solution
+        // Direction  EAST/WEST <-> NORTH/SOUTH
+        int turns = 0;
+        for (int i = 0; i < mazeSolution.size(); i++){
+
+        }
+
+       return turns;
+    }
 }
 

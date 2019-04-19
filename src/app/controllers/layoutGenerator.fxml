@@ -40,20 +40,21 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                     <children>
                         <ComboBox fx:id="comboAlgorithms" editable="true" layoutX="23.0" layoutY="14.0" prefHeight="39.0" prefWidth="215.0" promptText="Choose an algorithm" />
-                        <Button fx:id="btnGenerate" layoutX="66.0" layoutY="130.0" mnemonicParsing="false" onAction="#generate" prefHeight="27.0" prefWidth="130.0" text="Generate" />
-                        <Label layoutX="25.0" layoutY="176.0" text="Properties">
+                        <Button fx:id="btnGenerate" layoutX="69.0" layoutY="123.0" mnemonicParsing="false" onAction="#generate" prefHeight="27.0" prefWidth="124.0" text="Generate" />
+                        <Label layoutX="19.0" layoutY="167.0" text="Properties">
                             <font>
                                 <Font name="System Bold" size="13.0" />
                             </font></Label>
-                        <Label layoutX="31.0" layoutY="201.0" text="Dead ends:" />
-                        <Label layoutX="31.0" layoutY="237.0" text="Length of solution:" />
-                        <Label layoutX="31.0" layoutY="273.0" text="River factor:" />
-                        <Label layoutX="31.0" layoutY="305.0" text="Turns:" />
-                        <Label fx:id="labelDeadEnd" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="197.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
-                        <Label fx:id="labelLength" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="233.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
-                        <Label fx:id="labelRiver" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="269.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
-                        <Label fx:id="labelTurn" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="301.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
+                        <Label layoutX="25.0" layoutY="189.0" text="Dead ends:" />
+                        <Label layoutX="26.0" layoutY="217.0" text="Length of solution:" />
+                        <Label layoutX="25.0" layoutY="246.0" text="River factor:" />
+                        <Label layoutX="25.0" layoutY="275.0" text="Turns:" />
+                        <Label fx:id="labelDeadEnd" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="185.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
+                        <Label fx:id="labelLength" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="213.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
+                        <Label fx:id="labelRiver" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="242.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
+                        <Label fx:id="labelTurn" alignment="CENTER_RIGHT" layoutX="157.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="89.0" text="-" />
                   <ComboBox fx:id="comboSize" editable="true" layoutX="23.0" layoutY="69.0" prefHeight="39.0" prefWidth="215.0" promptText="Choose size of maze" />
+                  <Button fx:id="btnSolution" layoutX="69.0" layoutY="310.0" mnemonicParsing="false" onAction="#showSolution" prefHeight="27.0" prefWidth="124.0" text="Show solution" />
                     </children>
                 </AnchorPane>
             </items>

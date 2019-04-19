@@ -34,7 +34,7 @@ public class RecursiveBacktracking extends Algorithm {
             neighbours = maze.getPossibleNeighbours(currentX, currentY);
             if(neighbours.isEmpty())
                 break;
-            nextCell = getRandom(neighbours);
+            nextCell = Method.getRandom(neighbours);
             // Break down wall and track the operation
             maze.breakDownWall(maze.getTile(currentX, currentY), nextCell);
             opTracker.add(new KnockDownWall(currentX, currentY, nextCell.getXCoordinate(), nextCell.getYCoordinate()));
@@ -43,14 +43,6 @@ public class RecursiveBacktracking extends Algorithm {
             // Track backtracking operation
             opTracker.add(new BackTrack(currentX, currentY));
         } while(true);
-    }
-
-    private Cell getRandom(ArrayList<Cell> neighbours){
-        if(neighbours.size() == 1){
-            return neighbours.get(0);
-        }
-        int index = (int) (Math.random() * neighbours.size());
-        return neighbours.get(index);
     }
 
 }

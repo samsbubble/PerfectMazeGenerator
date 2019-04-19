@@ -1,19 +1,15 @@
 package app.logic;
 
-import app.logic.Tracking.BackTrack;
-import app.logic.Tracking.KnockDownWall;
-import app.logic.Tracking.Move;
-import app.logic.Tracking.OperationTracker;
+import app.logic.Tracking.*;
 import app.logic.domain.Cell;
 import app.logic.domain.Maze;
 
 import java.util.ArrayList;
 
-public class Prim extends Algorithm{
+class Prim extends Algorithm{
     private OperationTracker opTracker;
     private Maze maze;
-    private  ArrayList<Cell> frontiers;
-
+    private ArrayList<Cell> frontiers;
 
     Prim(Maze maze){
         this.maze = maze;
@@ -26,11 +22,9 @@ public class Prim extends Algorithm{
     }
 
     void runPrim(int currentX, int currentY){
-        Cell nextCell;
-        opTracker.add(new Move(currentX, currentY));
+        Cell nextCell, neighbour;
+        ArrayList<Cell> neighbourCells;
         do{
-            // Track move, using "backtracking" operation to remove marking of the cell
-            opTracker.add(new BackTrack(currentX, currentY));
             // Track visited
             maze.setVisited(currentX, currentY);
             //opTracker.add(new Visited());
@@ -42,16 +36,24 @@ public class Prim extends Algorithm{
                 break;
 
             // Choose next cell and remove it from frontiers
-            nextCell = getRandom(frontiers);
+            nextCell = Method.getRandom(frontiers);
             frontiers.remove(nextCell);
 
+            // Get a random cell which is visited and a neighbour to the chosen frontier
+            neighbourCells = maze.getPossibleNeighboursToFrontier(nextCell.getXCoordinate(), nextCell.getYCoordinate());
+
+            neighbour = Method.getRandom(neighbourCells);
+
             // Break down wall and track the operation
-            maze.breakDownWall(maze.getTile(currentX, currentY), nextCell);
-            opTracker.add(new KnockDownWall(currentX, currentY, nextCell.getXCoordinate(), nextCell.getYCoordinate()));
+            maze.breakDownWall(maze.getTile(neighbour.getXCoordinate(), neighbour.getYCoordinate()), nextCell);
+            opTracker.add(new KnockDownWall(neighbour.getXCoordinate(), neighbour.getYCoordinate(), nextCell.getXCoordinate(), nextCell.getYCoordinate()));
 
             // Set next cell to current cell
             currentX = nextCell.getXCoordinate();
             currentY = nextCell.getYCoordinate();
+
+            // Unmark the chosen cell
+            opTracker.add(new UnMark(currentX, currentY));
             } while(true);
     }
 
@@ -63,18 +65,11 @@ public class Prim extends Algorithm{
             if (!frontiers.contains(cell)) {
                 frontiers.add(cell);
                 // Track the frontiers
-                opTracker.add(new Move(cell.getXCoordinate(), cell.getYCoordinate()));
+                opTracker.add(new AddFrontier(cell.getXCoordinate(), cell.getYCoordinate()));
             }
         }
     }
 
-    private Cell getRandom(ArrayList<Cell> neighbours){
-        if(neighbours.size() == 1){
-            return neighbours.get(0);
-        }
-        int index = (int) (Math.random() * neighbours.size());
-        return neighbours.get(index);
-    }
 
 
 }
