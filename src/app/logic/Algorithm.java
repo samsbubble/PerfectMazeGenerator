@@ -2,6 +2,7 @@ package app.logic;
 
 import app.logic.Tracking.*;
 import app.logic.domain.Cell;
+import app.logic.domain.Direction;
 import app.logic.domain.Maze;
 import java.util.ArrayList;
 
@@ -47,10 +48,6 @@ public class Algorithm {
                 }
                 break;
         }
-    }
-
-    public void resetOperationTracker(){
-        operationTracker.clear();
     }
 
     public OperationTracker getOperationTracker(){
@@ -131,11 +128,30 @@ public class Algorithm {
         // Calculate the number of turns in the solution
         // Direction  EAST/WEST <-> NORTH/SOUTH
         int turns = 0;
-        for (int i = 0; i < mazeSolution.size(); i++){
+        Direction current, next;
+        for (int i = 0; i < mazeSolution.size()-2; i++){
+            current = getDirection(mazeSolution.get(i), mazeSolution.get(i+1));
+            next = getDirection(mazeSolution.get(i+1), mazeSolution.get(i+2));
 
+            if ((current.equals(Direction.EAST) || current.equals(Direction.WEST)) && (next.equals(Direction.NORTH) || next.equals(Direction.SOUTH)) ||
+                (current.equals(Direction.SOUTH) || current.equals(Direction.NORTH)) && (next.equals(Direction.WEST) || next.equals(Direction.EAST))){
+                turns++;
+            }
         }
 
        return turns;
+    }
+
+    private Direction getDirection(Cell currentCell, Cell nextCell) {
+        if (currentCell.getXCoordinate()-1 == nextCell.getXCoordinate()){ // Check for WEST
+            return Direction.WEST;
+        } else if (currentCell.getXCoordinate()+1 == nextCell.getXCoordinate()){ // Check for EAST
+            return Direction.EAST;
+        } else if (currentCell.getYCoordinate()-1 == nextCell.getYCoordinate()){ // Check for NORTH
+            return Direction.NORTH;
+        } else { // Check for SOUTH
+            return Direction.SOUTH;
+        }
     }
 }
 
