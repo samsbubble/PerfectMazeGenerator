@@ -30,7 +30,7 @@ public class Cell {
     }
 
     public void setVisited(){
-        this.visited = true;
+        this.visited = !this.visited;
     }
 
     public int getXCoordinate() {

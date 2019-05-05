@@ -12,10 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -31,8 +28,8 @@ public class ControllerGenerator {
     @FXML MenuItem menuitemsavefile, menuitemsavevideo, menuitemclose, menuitemabout;
     @FXML Button btnGenerate, btnSolution;
     @FXML Label labelDeadEnd, labelLength, labelRiver, labelTurn;
-    @FXML ComboBox<String> comboAlgorithms;
-    @FXML ComboBox<String> comboSize;
+    @FXML ChoiceBox<String> choiceAlgorithms;
+    @FXML ChoiceBox<String> choiceSize;
     @FXML Canvas canvas;
     private GraphicsContext gc;
     private int eventIndex = 0;
@@ -55,8 +52,8 @@ public class ControllerGenerator {
 
     @FXML
     public void initialize(){
-        comboAlgorithms.setItems(observableArrayList("Recursive Backtracking Algorithm", "Prim's Algorithm", "Wilson's Algorithm"));
-        comboSize.setItems(observableArrayList("3", "5", "10", "15", "20", "25", "50"));
+        choiceAlgorithms.setItems(observableArrayList("Recursive Backtracking Algorithm", "Prim's Algorithm", "Wilson's Algorithm", "Random Algo", "Bottom up Algo"));
+        choiceSize.setItems(observableArrayList("3", "5", "10", "15", "20", "25", "50"));
         btnSolution.setVisible(false);
     }
 
@@ -87,13 +84,13 @@ public class ControllerGenerator {
     @FXML
     public void generate(){
         btnGenerate.setDisable(true);
-        comboAlgorithms.setDisable(true);
-        comboSize.setDisable(true);
+        choiceAlgorithms.setDisable(true);
+        choiceSize.setDisable(true);
         btnSolution.setVisible(false);
         String algorithm = "";
         try {
-            algorithm = comboAlgorithms.getValue();
-            dimX = Integer.parseInt(comboSize.getValue());
+            algorithm = choiceAlgorithms.getValue();
+            dimX = Integer.parseInt(choiceSize.getValue());
             dimY = dimX;
             gc = canvas.getGraphicsContext2D();
             conversion = (int) canvas.getHeight()/dimX;
@@ -122,8 +119,8 @@ public class ControllerGenerator {
                     if (eventIndex >= operations.size()) {
                         gc.clearRect((currentX+0.24)*conversion, (currentY+0.24)*conversion, conversion/2.0, conversion/2.0);
                         btnGenerate.setDisable(false);
-                        comboAlgorithms.setDisable(false);
-                        comboSize.setDisable(false);
+                        choiceAlgorithms.setDisable(false);
+                        choiceSize.setDisable(false);
                         btnSolution.setVisible(true);
                         myTimer.cancel();
                         return;
@@ -147,7 +144,7 @@ public class ControllerGenerator {
 
         labelDeadEnd.setText(String.valueOf( algo.getNumberOfDeadEnds() ));
         labelRiver.setText(String.valueOf( algo.getRiverFactor() ));
-        labelLength.setText(String.valueOf( algo.lenghtOfSolution() ));
+        labelLength.setText(String.valueOf( algo.lengthOfSolution() ));
         labelTurn.setText(String.valueOf( algo.getNumberOfTurnsInSolution() ));
     }
 
@@ -229,7 +226,7 @@ public class ControllerGenerator {
             currentY = ((UnMark) op).getyCoordinate();
         }
         else if (op instanceof AddFrontier) {
-            gc.fillRect((((AddFrontier) op).getxCoordinate()+0.24)*conversion, (((AddFrontier) op).getyCoordinate()+0.24)*conversion, conversion/2, conversion/2);
+            gc.fillRect((((AddFrontier) op).getxCoordinate()+0.24)*conversion, (((AddFrontier) op).getyCoordinate()+0.24)*conversion, conversion/2.0, conversion/2.0);
         }
     }
 

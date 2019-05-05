@@ -5,7 +5,6 @@ import app.logic.Tracking.OperationTracker;
 import app.logic.domain.Cell;
 import app.logic.domain.Maze;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -30,13 +29,12 @@ class Wilson {
     void runWilson(int currentX, int currentY){
         Cell startingCell;
         HashMap<Cell, Cell> walk;
-        Cell currentCell = maze.getTile(currentX, currentY);
-        currentCell.setVisited();
+        maze.setVisited(currentX, currentY);
         remainingCells--;
         while (remainingCells > 0) {
             startingCell = Method.getRandomPossibleCellInMaze(maze);
 
-            walk = performRandomWalk(startingCell);
+            walk = Method.performRandomWalk(startingCell, maze);
 
             addWalkToMaze(walk, startingCell);
         }
@@ -47,7 +45,7 @@ class Wilson {
         currentCell = startingCell;
         do {
             remainingCells--;
-            currentCell.setVisited();
+            maze.setVisited(currentCell.getXCoordinate(), currentCell.getYCoordinate());
             nextCell = walk.get(currentCell);
 
             maze.breakDownWall(currentCell, nextCell);
@@ -58,25 +56,6 @@ class Wilson {
 
             currentCell = nextCell;
         } while (true);
-    }
-
-    private HashMap<Cell, Cell> performRandomWalk(Cell startingCell) {
-        HashMap<Cell, Cell> walk = new HashMap<>();
-        Cell currentCell = startingCell;
-        Cell nextCell;
-        ArrayList<Cell> neighbours;
-        do {
-            neighbours = maze.getAllNeighbours(currentCell.getXCoordinate(), currentCell.getYCoordinate());
-            nextCell = Method.getRandom(neighbours);
-
-            walk.put(currentCell, nextCell);
-
-            if (nextCell.isVisited())
-                break;
-
-            currentCell = nextCell;
-        } while(true);
-        return walk;
     }
 
 

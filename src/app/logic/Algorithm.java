@@ -43,9 +43,16 @@ public class Algorithm {
                 Wilson wilson = new Wilson(maze);
                 wilson.runWilson(currentX, currentY);
                 this.operationTracker = wilson.getOpTracker();
-                for ( int i = 0; i < operationTracker.size(); i++){
-                    System.out.println(operationTracker.get(i));
-                }
+                break;
+            case "Random Algo":
+                RandomAlgo randomAlgo = new RandomAlgo(maze);
+                randomAlgo.runRandomAlgo();
+                this.operationTracker = randomAlgo.getOpTracker();
+                break;
+            case "Bottom up Algo":
+                BottomUpAlgo bottomUpAlgo = new BottomUpAlgo(maze);
+                bottomUpAlgo.runBottomUpAlgo();
+                this.operationTracker = bottomUpAlgo.getOpTracker();
                 break;
         }
     }
@@ -57,14 +64,14 @@ public class Algorithm {
 
     private boolean calculateSolutionToMaze(Cell prevCell, Cell curCell){
         mazeSolution.add(maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate()));
+        //System.out.println("Adding " + "(" + curCell.getXCoordinate() +", " + curCell.getYCoordinate() + ")");
 
         // Check if we are done
         if(curCell.getXCoordinate() == endingCell.getXCoordinate() && curCell.getYCoordinate() == endingCell.getYCoordinate()){
             return true;
         }
 
-        for (Cell next
-                : maze.getPossiblePaths
+        for (Cell next : maze.getPossiblePaths
                 (
                         prevCell == null ? null : maze.getTile(prevCell.getXCoordinate(), prevCell.getYCoordinate()),
                         maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate())
@@ -73,19 +80,20 @@ public class Algorithm {
         {
             if(calculateSolutionToMaze(maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate()), next))
                 return true;
-
-            mazeSolution.remove(next);
         }
 
+        mazeSolution.remove(mazeSolution.remove(mazeSolution.size()-1));
+        //System.out.println("Removing " + "(" + curCell.getXCoordinate() +", " + curCell.getYCoordinate() + ")");
         return false;
     }
 
 
     public ArrayList<Cell> getSolution() throws Exception {
         mazeSolution = new ArrayList<>();
-        if (calculateSolutionToMaze(null, startingCell))
+        if (calculateSolutionToMaze(null, startingCell)) {
+            //System.out.println(mazeSolution.size());
             return mazeSolution;
-        else
+        } else
             throw new Exception("Error in solution");
     }
 
@@ -119,8 +127,9 @@ public class Algorithm {
         return riverFactor;
     }
 
-    public int lenghtOfSolution() {
+    public int lengthOfSolution() {
         // Calculate the length of the solution
+        //System.out.println(mazeSolution.size());
         return mazeSolution.size();
     }
 

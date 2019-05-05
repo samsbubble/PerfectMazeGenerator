@@ -44,5 +44,4 @@ public class RecursiveBacktracking extends Algorithm {
             opTracker.add(new BackTrack(currentX, currentY));
         } while(true);
     }
-
 }

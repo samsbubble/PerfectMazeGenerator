@@ -57,7 +57,6 @@ class Prim extends Algorithm{
             } while(true);
     }
 
-
     private void addFrontiers(int currentX, int currentY){
         ArrayList<Cell> neighbours = maze.getPossibleNeighbours(currentX, currentY);
 
@@ -69,7 +68,4 @@ class Prim extends Algorithm{
             }
         }
     }
-
-
-
 }
