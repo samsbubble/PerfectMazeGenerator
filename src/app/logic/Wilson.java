@@ -38,6 +38,7 @@ class Wilson {
 
             addWalkToMaze(walk, startingCell);
         }
+        System.gc();
     }
 
     private void addWalkToMaze(HashMap<Cell, Cell> walk, Cell startingCell) {

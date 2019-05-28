@@ -55,6 +55,9 @@ class Prim extends Algorithm{
             // Unmark the chosen cell
             opTracker.add(new UnMark(currentX, currentY));
             } while(true);
+        frontiers = null;
+        maze = null;
+        System.gc();
     }
 
     private void addFrontiers(int currentX, int currentY){

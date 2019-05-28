@@ -54,6 +54,11 @@ public class Algorithm {
                 bottomUpAlgo.runBottomUpAlgo();
                 this.operationTracker = bottomUpAlgo.getOpTracker();
                 break;
+            case "RB Bottom Up Algo":
+                RBBottomUp rbBottomUp = new RBBottomUp(maze);
+                rbBottomUp.runRBBottomUp();
+                this.operationTracker = rbBottomUp.getOperationTracker();
+                break;
         }
     }
 
@@ -82,19 +87,19 @@ public class Algorithm {
                 return true;
         }
 
-        mazeSolution.remove(mazeSolution.remove(mazeSolution.size()-1));
+        mazeSolution.remove(mazeSolution.size()-1);
         //System.out.println("Removing " + "(" + curCell.getXCoordinate() +", " + curCell.getYCoordinate() + ")");
         return false;
     }
 
 
-    public ArrayList<Cell> getSolution() throws Exception {
+    public ArrayList<Cell> getSolution() throws SolutionException {
         mazeSolution = new ArrayList<>();
         if (calculateSolutionToMaze(null, startingCell)) {
             //System.out.println(mazeSolution.size());
             return mazeSolution;
         } else
-            throw new Exception("Error in solution");
+            throw new SolutionException("Error in solution");
     }
 
     public int getNumberOfDeadEnds() {

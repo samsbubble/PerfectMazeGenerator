@@ -10,19 +10,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-public class BottomUpAlgo {
+class BottomUpAlgo extends Algorithm {
     // This algorithm takes a random walk from the starting point to the ending point of the maze to create the solution,
     // and afterwards build the maze around the solution with Prim's algorithm.
     private OperationTracker opTracker;
     private Maze maze;
     private int currentX, currentY;
-    private ArrayList<Cell> solution;
     private ArrayList<Cell> frontiers;
 
-    public BottomUpAlgo(Maze maze){
+    BottomUpAlgo(Maze maze){
+        System.gc();
         this.maze = maze;
         opTracker = new OperationTracker();
-        solution = new ArrayList<>();
         frontiers = new ArrayList<>();
         currentX = 0;
         currentY = 0;
@@ -69,7 +68,8 @@ public class BottomUpAlgo {
             currentX = nextCell.getXCoordinate();
             currentY = nextCell.getYCoordinate();
         } while(true);
-
+        frontiers = null;
+        System.gc();
     }
 
     OperationTracker getOpTracker() {

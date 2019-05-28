@@ -61,13 +61,10 @@ public class Maze {
             currentCell.breakDownWall(Direction.SOUTH);
             nextCell.breakDownWall(Direction.NORTH);
         }
-
-
     }
 
     public ArrayList<Cell> getPossibleNeighbours(int currentX, int currentY) {
         ArrayList<Cell> possibleNeighbours = new ArrayList<>();
-
         // WEST
         if (0 <= currentX-1 && cells[currentX-1][currentY].isVisited().equals(false))
             possibleNeighbours.add(cells[currentX-1][currentY]);
@@ -112,7 +109,6 @@ public class Maze {
 
     public ArrayList<Cell> getAllNeighbours(int currentX, int currentY) {
         ArrayList<Cell> possibleNeighbours = new ArrayList<>();
-
         // WEST
         if (0 <= currentX-1)
             possibleNeighbours.add(cells[currentX-1][currentY]);
@@ -134,23 +130,23 @@ public class Maze {
 
 
     public ArrayList<Cell> getPossiblePaths(Cell prevCell, Cell curCell) {
-        ArrayList<Cell> possiblePaths = new ArrayList<>();
+        ArrayList<Cell> possiblePath = new ArrayList<>();
 
         if( !curCell.getWall(Direction.NORTH) && 0 <= curCell.getYCoordinate()-1){
-            possiblePaths.add(cells[curCell.getXCoordinate()][curCell.getYCoordinate()-1]);
+            possiblePath.add(cells[curCell.getXCoordinate()][curCell.getYCoordinate()-1]);
         }
         if( !curCell.getWall(Direction.SOUTH) && curCell.getYCoordinate()+1 < dimY){
-            possiblePaths.add(cells[curCell.getXCoordinate()][curCell.getYCoordinate()+1]);
+            possiblePath.add(cells[curCell.getXCoordinate()][curCell.getYCoordinate()+1]);
         }
         if( !curCell.getWall(Direction.EAST) && curCell.getXCoordinate()+1 < dimX){
-            possiblePaths.add(cells[curCell.getXCoordinate()+1][curCell.getYCoordinate()]);
+            possiblePath.add(cells[curCell.getXCoordinate()+1][curCell.getYCoordinate()]);
         }
         if( !curCell.getWall(Direction.WEST) && 0 <= curCell.getXCoordinate()-1){
-            possiblePaths.add(cells[curCell.getXCoordinate()-1][curCell.getYCoordinate()]);
+            possiblePath.add(cells[curCell.getXCoordinate()-1][curCell.getYCoordinate()]);
         }
         if (prevCell != null){
-            possiblePaths.remove(prevCell);
+            possiblePath.remove(prevCell);
         }
-        return possiblePaths;
+        return possiblePath;
     }
 }
