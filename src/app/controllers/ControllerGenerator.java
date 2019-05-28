@@ -3,19 +3,27 @@ package app.controllers;
 import app.Main;
 import app.logic.Algorithm;
 import app.domainUI.AlertBox;
+import app.logic.SolutionException;
 import app.logic.Tracking.*;
 import app.logic.domain.Cell;
+import app.test.TestGenerator;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.control.*;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -25,7 +33,7 @@ import static javafx.collections.FXCollections.observableArrayList;
 
 public class ControllerGenerator {
 
-    @FXML MenuItem menuitemsavefile, menuitemsavevideo, menuitemclose, menuitemabout;
+    @FXML MenuItem generateTests, saveMaze, menuitemclose, menuitemabout;
     @FXML Button btnGenerate, btnSolution;
     @FXML Label labelDeadEnd, labelLength, labelRiver, labelTurn;
     @FXML ChoiceBox<String> choiceAlgorithms;
@@ -38,7 +46,7 @@ public class ControllerGenerator {
     private int currentX = -1, currentY = -1;
     private Algorithm algo = new Algorithm();
     private ArrayList<Cell> mazeSolution;
-    private int dimX = 0, dimY = 0;
+    private int dimX = 0, dimY = 0, imageCount = 1;
 
     static Stage window;
 
@@ -52,20 +60,38 @@ public class ControllerGenerator {
 
     @FXML
     public void initialize(){
-        choiceAlgorithms.setItems(observableArrayList("Recursive Backtracking Algorithm", "Prim's Algorithm", "Wilson's Algorithm", "Random Algo", "Bottom up Algo"));
-        choiceSize.setItems(observableArrayList("3", "5", "10", "15", "20", "25", "50"));
+        choiceAlgorithms.setItems(observableArrayList("Recursive Backtracking Algorithm", "Prim's Algorithm", "Wilson's Algorithm", "Random Algo", "Bottom up Algo", "RB Bottom Up Algo"));
+        choiceSize.setItems(observableArrayList("3", "5", "10", "15", "20", "25", "50", "60", "70", "80", "90", "100"));
         btnSolution.setVisible(false);
     }
 
     @FXML
-    public void saveFile(){
-        AlertBox.display("Warning", "Not Implemented yet.");
+    public void generateTests(){
+        TestGenerator testGenerator = new TestGenerator();
+
+        try {
+            testGenerator.generateTests();
+        } catch (SolutionException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    public void saveVideo(){
-        AlertBox.display("Warning", "Not Implemented yet.");
+    public void saveMaze() {
+        WritableImage image = canvas.snapshot(new SnapshotParameters(), null);
+
+        String path = choiceAlgorithms.getValue();
+
+        File file = new File(path + " Maze " + imageCount + ".png");
+
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+            imageCount++;
+        } catch (IOException e) {
+            AlertBox.display("Error", "The maze could not be saved.");
+        }
     }
+
 
     @FXML
     public void closeWindow(){
@@ -83,6 +109,7 @@ public class ControllerGenerator {
 
     @FXML
     public void generate(){
+        System.gc();
         btnGenerate.setDisable(true);
         choiceAlgorithms.setDisable(true);
         choiceSize.setDisable(true);
@@ -103,7 +130,6 @@ public class ControllerGenerator {
 
         // Draw the maze skeleton
         initialiseMaze(dimX, conversion);
-
         // Get the maze generated
         try {
             algo.generateMaze(dimX, dimY);
@@ -130,7 +156,7 @@ public class ControllerGenerator {
                     eventIndex++;
                 }
             };
-            myTimer.scheduleAtFixedRate(myTask, 0L, (10000L/operations.size()));
+            myTimer.scheduleAtFixedRate(myTask, 0L, (int)(1000L*dimX/operations.size()));
         }catch (Exception e) {
             AlertBox.display("Warning", "Something went wrong in the generation of the maze.");
         }
@@ -138,7 +164,7 @@ public class ControllerGenerator {
         // Calculate solution to the maze and the properties
         try {
             mazeSolution = algo.getSolution();
-        } catch (Exception e){
+        } catch (SolutionException e){
             AlertBox.display("Warning", "The solution could not be found.");
         }
 

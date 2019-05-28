@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-public class RandomAlgo {
+public class RandomAlgo extends Algorithm {
     private OperationTracker opTracker;
     private Maze maze;
     private int currentX, currentY;
