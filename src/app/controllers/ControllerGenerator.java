@@ -90,7 +90,7 @@ public class ControllerGenerator {
 
         String path = choiceAlgorithms.getValue();
 
-        File file = new File(path + " Maze " + imageCount + ".png");
+        File file = new File("images/" + path + " Maze " + imageCount + ".png");
 
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);

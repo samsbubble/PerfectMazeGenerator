@@ -14,6 +14,8 @@ public class TestGenerator {
     private static final int ITERATIONTIME = 200;
     private static final int DIM_X = 50, DIM_Y = 50;
 
+    private String folder = "tests/";
+
     public TestGenerator(){
     }
 
@@ -64,7 +66,7 @@ public class TestGenerator {
             lines.add(deadEnds + " " + rivers + " " + length + " " + turns);
             //System.out.println("RB Bottom Up done " + i);
         }
-        Files.write(Paths.get("RBBottomUp.txt"), lines);
+        Files.write(Paths.get(folder+"RBBottomUp.txt"), lines);
     }
 
     private void testRecursiveBacktracking() throws SolutionException, IOException {
@@ -108,7 +110,7 @@ public class TestGenerator {
             lines.add(deadEnds + " " + rivers + " " + length + " " + turns);
             //System.out.println("Prim done " + i);
         }
-        Files.write(Paths.get("Prim.txt"), lines);
+        Files.write(Paths.get(folder+"Prim.txt"), lines);
     }
 
     private void testWilson() throws SolutionException, IOException {
@@ -130,7 +132,7 @@ public class TestGenerator {
             lines.add(deadEnds + " " + rivers + " " + length + " " + turns);
             //System.out.println("Wilson done " + i);
         }
-        Files.write(Paths.get("Wilson.txt"), lines);
+        Files.write(Paths.get(folder+"Wilson.txt"), lines);
     }
 
     private void testRandom() throws SolutionException, IOException {
@@ -152,7 +154,7 @@ public class TestGenerator {
             lines.add(deadEnds + " " + rivers + " " + length + " " + turns);
             //System.out.println("Random done " + i);
         }
-        Files.write(Paths.get("Random.txt"), lines);
+        Files.write(Paths.get(folder+"Random.txt"), lines);
     }
 
     private void testButtomUp() throws SolutionException, IOException {
@@ -175,7 +177,7 @@ public class TestGenerator {
             //System.out.println(deadEnds + " " + rivers + " " + length + " " + turns);
             //System.out.println("Bottom up done " + i);
         }
-        Files.write(Paths.get("BottomUp.txt"), lines);
+        Files.write(Paths.get(folder+"BottomUp.txt"), lines);
     }
 
     private void testRandomTime() throws IOException {
@@ -369,7 +371,7 @@ public class TestGenerator {
         System.out.println("Each RC run took an average of " + elapsedTimeInSecond17 + " seconds for (320x320)");
         lines.add(""+elapsedTimeInSecond17);
 
-        Files.write(Paths.get("RandomChoiceTimeTest.txt"), lines);
+        Files.write(Paths.get(folder+"RandomChoiceTimeTest.txt"), lines);
     }
 
     private void testRBBottomUpTime() throws IOException {
@@ -562,7 +564,7 @@ public class TestGenerator {
         System.out.println("Each RB Bottom Up run took an average of " + elapsedTimeInSecond17 + " seconds for (320x320)");
         lines.add(""+elapsedTimeInSecond17);
 
-        Files.write(Paths.get("RBBottomUpTimeTest.txt"), lines);
+        Files.write(Paths.get(folder+"RBBottomUpTimeTest.txt"), lines);
     }
 
     private void testWilsonTime() throws IOException {
@@ -757,7 +759,7 @@ public class TestGenerator {
         lines.add(""+elapsedTimeInSecond17);
 
 
-        Files.write(Paths.get("WilsonTimeTest.txt"), lines);
+        Files.write(Paths.get(folder+"WilsonTimeTest.txt"), lines);
     }
 
     private void testPrimTime() throws IOException {
@@ -952,7 +954,7 @@ public class TestGenerator {
         lines.add(""+elapsedTimeInSecond17);
 
 
-        Files.write(Paths.get("PrimTimeTest.txt"), lines);
+        Files.write(Paths.get(folder+"PrimTimeTest.txt"), lines);
     }
 
     private void testRecursiveBacktrackingTime() throws IOException {
@@ -1145,7 +1147,7 @@ public class TestGenerator {
         lines.add(""+elapsedTimeInSecond17);
 
 
-        Files.write(Paths.get("RBTimeTest.txt"), lines);
+        Files.write(Paths.get(folder+"RBTimeTest.txt"), lines);
     }
 
     private void testButtomUpTime() throws IOException {
@@ -1336,7 +1338,7 @@ public class TestGenerator {
         System.out.println("Each Bottom Up run took an average of " + elapsedTimeInSecond17 + " seconds for (320x320)");
         lines.add(""+elapsedTimeInSecond17);
 
-        Files.write(Paths.get("BottomUpTimeTest.txt"), lines);
+        Files.write(Paths.get(folder+"BottomUpTimeTest.txt"), lines);
     }
 
 }
