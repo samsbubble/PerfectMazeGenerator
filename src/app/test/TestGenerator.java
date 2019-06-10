@@ -88,7 +88,7 @@ public class TestGenerator {
             lines.add(deadEnds + " " + rivers + " " + length + " " + turns);
             //System.out.println("Recursive backtracking done " + i);
         }
-        Files.write(Paths.get("RecursiveBacktracking.txt"), lines);
+        Files.write(Paths.get(folder+"RecursiveBacktracking.txt"), lines);
     }
 
     private void testPrim() throws SolutionException, IOException {
