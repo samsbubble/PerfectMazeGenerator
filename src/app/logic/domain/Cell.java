@@ -4,6 +4,7 @@ import app.logic.domain.Direction;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Cell {
 
@@ -61,5 +62,21 @@ public class Cell {
 
     public boolean getWall(Direction dir) {
         return walls.get(dir);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if(!(obj instanceof Cell)) {
+            return super.equals(obj);
+        }
+
+        Cell comp = (Cell)obj;
+        return this.getXCoordinate() == comp.getXCoordinate() && this.getYCoordinate() == comp.getYCoordinate();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getXCoordinate(), this.getYCoordinate());
     }
 }

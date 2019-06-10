@@ -5,6 +5,7 @@ import app.logic.domain.Cell;
 import app.logic.domain.Direction;
 import app.logic.domain.Maze;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Algorithm {
     private int dimX, dimY;
@@ -44,17 +45,17 @@ public class Algorithm {
                 wilson.runWilson(currentX, currentY);
                 this.operationTracker = wilson.getOpTracker();
                 break;
-            case "Random Algo":
+            case "Random Choice":
                 RandomAlgo randomAlgo = new RandomAlgo(maze);
                 randomAlgo.runRandomAlgo();
                 this.operationTracker = randomAlgo.getOpTracker();
                 break;
-            case "Bottom up Algo":
+            case "Bottom Up":
                 BottomUpAlgo bottomUpAlgo = new BottomUpAlgo(maze);
                 bottomUpAlgo.runBottomUpAlgo();
                 this.operationTracker = bottomUpAlgo.getOpTracker();
                 break;
-            case "RB Bottom Up Algo":
+            case "RB Bottom Up":
                 RBBottomUp rbBottomUp = new RBBottomUp(maze);
                 rbBottomUp.runRBBottomUp();
                 this.operationTracker = rbBottomUp.getOperationTracker();
@@ -67,8 +68,10 @@ public class Algorithm {
     }
 
 
-    private boolean calculateSolutionToMaze(Cell prevCell, Cell curCell){
-        mazeSolution.add(maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate()));
+    // Recursive way of finding the solution.
+    /*private boolean calculateSolutionToMaze(Cell prevCell, Cell curCell){
+        mazeSolution.add(maze.getCell(curCell.getXCoordinate(), curCell.getYCoordinate()));
+        //System.out.println(mazeSolution.size());
         //System.out.println("Adding " + "(" + curCell.getXCoordinate() +", " + curCell.getYCoordinate() + ")");
 
         // Check if we are done
@@ -78,24 +81,70 @@ public class Algorithm {
 
         for (Cell next : maze.getPossiblePaths
                 (
-                        prevCell == null ? null : maze.getTile(prevCell.getXCoordinate(), prevCell.getYCoordinate()),
-                        maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate())
+                        prevCell == null ? null : maze.getCell(prevCell.getXCoordinate(), prevCell.getYCoordinate()),
+                        maze.getCell(curCell.getXCoordinate(), curCell.getYCoordinate())
                 )
             )
         {
-            if(calculateSolutionToMaze(maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate()), next))
+            if(calculateSolutionToMaze(maze.getCell(curCell.getXCoordinate(), curCell.getYCoordinate()), next))
                 return true;
         }
 
         mazeSolution.remove(mazeSolution.size()-1);
         //System.out.println("Removing " + "(" + curCell.getXCoordinate() +", " + curCell.getYCoordinate() + ")");
         return false;
-    }
+    }*/
 
+
+    // Iterative way of finding the solution.
+    private boolean calculateSolutionToMaze(Cell startingCell){
+
+        Cell prevCell = null;
+        Cell curCell = startingCell;
+        ArrayList<Cell> possiblePaths = null;
+        HashSet<Cell> deadCells = new HashSet<>();
+
+        while(true) {
+            //System.out.println(mazeSolution.size());
+            mazeSolution.add(maze.getCell(curCell.getXCoordinate(), curCell.getYCoordinate()));
+
+            if(curCell.equals(endingCell)) {
+                break;
+            }
+
+            possiblePaths = maze.getPossiblePaths (
+                    prevCell == null ? null : maze.getCell(prevCell.getXCoordinate(), prevCell.getYCoordinate()),
+                    maze.getCell(curCell.getXCoordinate(), curCell.getYCoordinate())
+            );
+
+            boolean didBreak = false;
+            for(Cell next : possiblePaths) {
+                if(deadCells.contains(next)) {
+                    continue;
+                }
+
+                prevCell = curCell;
+                curCell = next;
+                didBreak = true;
+                break;
+            }
+
+            if(didBreak) {
+                continue;
+            }
+
+            deadCells.add(mazeSolution.remove(mazeSolution.size()-1));
+            curCell = mazeSolution.remove(mazeSolution.size()-1);
+
+            prevCell = mazeSolution.isEmpty() ? null : mazeSolution.get(mazeSolution.size()-1);
+
+        }
+        return true;
+    }
 
     public ArrayList<Cell> getSolution() throws SolutionException {
         mazeSolution = new ArrayList<>();
-        if (calculateSolutionToMaze(null, startingCell)) {
+        if (calculateSolutionToMaze(startingCell)) {
             //System.out.println(mazeSolution.size());
             return mazeSolution;
         } else
@@ -109,7 +158,7 @@ public class Algorithm {
 
         for (int i = 0; i < maze.getDimX(); i++) {
             for (int j = 0; j < maze.getDimY(); j++) {
-                cell = maze.getTile(i, j);
+                cell = maze.getCell(i, j);
                 if (cell.getNumberOfWalls() == 3)
                     deadEnds++;
             }
@@ -124,8 +173,8 @@ public class Algorithm {
 
         for (int i = 0; i < maze.getDimX(); i++) {
             for (int j = 0; j < maze.getDimY(); j++) {
-                cell = maze.getTile(i, j);
-                if (cell.getNumberOfWalls() == 1)
+                cell = maze.getCell(i, j);
+                if (cell.getNumberOfWalls() == 1 || cell.getNumberOfWalls() == 0)
                     riverFactor++;
             }
         }

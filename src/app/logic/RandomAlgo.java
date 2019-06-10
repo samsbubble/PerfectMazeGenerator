@@ -1,6 +1,5 @@
 package app.logic;
 
-import app.logic.Tracking.AddFrontier;
 import app.logic.Tracking.KnockDownWall;
 import app.logic.Tracking.OperationTracker;
 import app.logic.domain.Cell;
@@ -33,7 +32,7 @@ public class RandomAlgo extends Algorithm {
         cells = new ArrayList<>();
         for (int i = 0; i < maze.getDimX(); i++) {
             for (int j = 0; j < maze.getDimY(); j++) {
-                cells.add(maze.getTile(i, j));
+                cells.add(maze.getCell(i, j));
             }
         }
     }
@@ -45,13 +44,13 @@ public class RandomAlgo extends Algorithm {
         currentY = (int) (Math.random() * maze.getDimY());
 
         // Mark the first cell as visited
-        frontiers.add(maze.getTile(currentX, currentY));
+        frontiers.add(maze.getCell(currentX, currentY));
         //System.out.println("Adding (" + currentX + ", " + currentY + ")");
         maze.setVisited(currentX, currentY);
         addFrontiers(currentX, currentY);
         // Remove from cells left and add to path
-        path.push(maze.getTile(currentX, currentY));
-        cells.remove(maze.getTile(currentX, currentY));
+        path.push(maze.getCell(currentX, currentY));
+        cells.remove(maze.getCell(currentX, currentY));
 
         while (!cells.isEmpty()) {
             choice = (int) (Math.random()*3);
@@ -77,13 +76,13 @@ public class RandomAlgo extends Algorithm {
             stepPrim();
             stepWilson();*/
         }
-        frontiers.remove(maze.getTile(currentX, currentY));
+        frontiers.remove(maze.getCell(currentX, currentY));
         //System.out.println("Removing (" + currentX + ", " + currentY + ")");
     }
 
     private void stepRecursiveBacktracking() {
         // Remove cell from frontier list
-        frontiers.remove(maze.getTile(currentX, currentY));
+        frontiers.remove(maze.getCell(currentX, currentY));
         //System.out.println("Removing (" + currentX + ", " + currentY + ")");
 
         // Find a neighbouring cell
@@ -99,13 +98,13 @@ public class RandomAlgo extends Algorithm {
         Cell nextCell = Method.getRandom(neighbours);
 
         // Break down wall between the current and the next cell
-        maze.breakDownWall(maze.getTile(currentX, currentY), nextCell);
+        maze.breakDownWall(maze.getCell(currentX, currentY), nextCell);
         opTracker.add(new KnockDownWall(currentX, currentY, nextCell.getXCoordinate(), nextCell.getYCoordinate()));
         maze.setVisited(nextCell.getXCoordinate(), nextCell.getYCoordinate());
 
         // Add neighbours to the frontiers
         addFrontiers(nextCell.getXCoordinate(), nextCell.getYCoordinate());
-        path.push(maze.getTile(nextCell.getXCoordinate(), nextCell.getYCoordinate()));
+        path.push(maze.getCell(nextCell.getXCoordinate(), nextCell.getYCoordinate()));
         cells.remove(nextCell);
 
         // Set next cell to be the current cell
@@ -114,7 +113,7 @@ public class RandomAlgo extends Algorithm {
     }
 
     private void stepPrim() {
-        frontiers.remove(maze.getTile(currentX, currentY));
+        frontiers.remove(maze.getCell(currentX, currentY));
         //System.out.println("Removing (" + currentX + ", " + currentY + ")");
 
         // If there is no frontiers, return
@@ -133,7 +132,7 @@ public class RandomAlgo extends Algorithm {
         Cell neighbour = Method.getRandom(neighbourCells);
 
         // Break down wall and track the operation
-        maze.breakDownWall(maze.getTile(neighbour.getXCoordinate(), neighbour.getYCoordinate()), nextCell);
+        maze.breakDownWall(maze.getCell(neighbour.getXCoordinate(), neighbour.getYCoordinate()), nextCell);
         opTracker.add(new KnockDownWall(neighbour.getXCoordinate(), neighbour.getYCoordinate(), nextCell.getXCoordinate(), nextCell.getYCoordinate()));
         maze.setVisited(nextCell.getXCoordinate(), nextCell.getYCoordinate());
 
@@ -159,7 +158,7 @@ public class RandomAlgo extends Algorithm {
     }
 
     private void stepWilson(){
-        frontiers.remove(maze.getTile(currentX, currentY));
+        frontiers.remove(maze.getCell(currentX, currentY));
         //System.out.println("Removing (" + currentX + ", " + currentY + ")");
         if(cells.isEmpty())
             return;
@@ -170,7 +169,7 @@ public class RandomAlgo extends Algorithm {
 
         maze.setVisited(startingCell.getXCoordinate(), startingCell.getYCoordinate());
         path.push(startingCell);
-        cells.remove(maze.getTile(startingCell.getXCoordinate(), startingCell.getYCoordinate()));
+        cells.remove(maze.getCell(startingCell.getXCoordinate(), startingCell.getYCoordinate()));
         addFrontiers(startingCell.getXCoordinate(), startingCell.getYCoordinate());
 
         if(walk.isEmpty())
@@ -196,7 +195,7 @@ public class RandomAlgo extends Algorithm {
 
             maze.setVisited(nextCell.getXCoordinate(), nextCell.getYCoordinate());
             path.push(nextCell);
-            cells.remove(maze.getTile(nextCell.getXCoordinate(), nextCell.getYCoordinate()));
+            cells.remove(maze.getCell(nextCell.getXCoordinate(), nextCell.getYCoordinate()));
 
             currentCell = nextCell;
         } while (true);

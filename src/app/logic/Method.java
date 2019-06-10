@@ -20,8 +20,8 @@ public class Method {
     static Cell getRandomPossibleCellInMaze(Maze maze) {
         for(int i = 0; i < maze.getDimX(); i++){
             for(int j = 0; j < maze.getDimY(); j++){
-                if (!maze.getTile(i, j).isVisited())
-                    return maze.getTile(i, j);
+                if (!maze.getCell(i, j).isVisited())
+                    return maze.getCell(i, j);
             }
         }
         return null;
@@ -29,18 +29,19 @@ public class Method {
 
     static HashMap<Cell, Cell> performRandomWalk(Cell startingCell, Maze maze) {
         HashMap<Cell, Cell> walk = new HashMap<>();
-        Cell currentCell = startingCell, nextCell;
+        Cell currentCell = startingCell;
+        Cell nextCell;
         ArrayList<Cell> neighbours;
         do {
             neighbours = maze.getAllNeighbours(currentCell.getXCoordinate(), currentCell.getYCoordinate());
             nextCell = Method.getRandom(neighbours);
 
-            walk.put(currentCell, nextCell);
+            walk.put(maze.getCell(currentCell.getXCoordinate(), currentCell.getYCoordinate()), maze.getCell(nextCell.getXCoordinate(), nextCell.getYCoordinate()));
 
-            if (nextCell.isVisited())
+            if (maze.getCell(nextCell.getXCoordinate(), nextCell.getYCoordinate()).isVisited())
                 break;
 
-            currentCell = nextCell;
+            currentCell = maze.getCell(nextCell.getXCoordinate(), nextCell.getYCoordinate());
         } while(true);
         return walk;
     }

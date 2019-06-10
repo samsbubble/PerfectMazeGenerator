@@ -33,33 +33,33 @@ public class Maze {
         cells[posX][posY].setVisited();
     }
 
-    public Cell getTile(int currentX, int currentY){
+    public Cell getCell(int currentX, int currentY){
         return cells[currentX][currentY];
     }
 
     public void breakDownWall(Cell currentCell, Cell nextCell){
         // Check for WEST
         if (currentCell.getXCoordinate()-1 == nextCell.getXCoordinate()){
-            currentCell.breakDownWall(Direction.WEST);
-            nextCell.breakDownWall(Direction.EAST);
+            cells[currentCell.getXCoordinate()][currentCell.getYCoordinate()].breakDownWall(Direction.WEST);
+            cells[nextCell.getXCoordinate()][nextCell.getYCoordinate()].breakDownWall(Direction.EAST);
         }
 
         // Check for EAST
         if (currentCell.getXCoordinate()+1 == nextCell.getXCoordinate()){
-            currentCell.breakDownWall(Direction.EAST);
-            nextCell.breakDownWall(Direction.WEST);
+            cells[currentCell.getXCoordinate()][currentCell.getYCoordinate()].breakDownWall(Direction.EAST);
+            cells[nextCell.getXCoordinate()][nextCell.getYCoordinate()].breakDownWall(Direction.WEST);
         }
 
         // Check for NORTH
         if (currentCell.getYCoordinate()-1 == nextCell.getYCoordinate()){
-            currentCell.breakDownWall(Direction.NORTH);
-            nextCell.breakDownWall(Direction.SOUTH);
+            cells[currentCell.getXCoordinate()][currentCell.getYCoordinate()].breakDownWall(Direction.NORTH);
+            cells[nextCell.getXCoordinate()][nextCell.getYCoordinate()].breakDownWall(Direction.SOUTH);
         }
 
         // Check for SOUTH
         if (currentCell.getYCoordinate()+1 == nextCell.getYCoordinate()){
-            currentCell.breakDownWall(Direction.SOUTH);
-            nextCell.breakDownWall(Direction.NORTH);
+            cells[currentCell.getXCoordinate()][currentCell.getYCoordinate()].breakDownWall(Direction.SOUTH);
+            cells[nextCell.getXCoordinate()][nextCell.getYCoordinate()].breakDownWall(Direction.NORTH);
         }
     }
 
@@ -83,7 +83,6 @@ public class Maze {
 
         return possibleNeighbours;
     }
-
 
     public ArrayList<Cell> getPossibleNeighboursToFrontier(int currentX, int currentY) {
         ArrayList<Cell> possibleNeighbours = new ArrayList<>();
@@ -127,7 +126,6 @@ public class Maze {
 
         return possibleNeighbours;
     }
-
 
     public ArrayList<Cell> getPossiblePaths(Cell prevCell, Cell curCell) {
         ArrayList<Cell> possiblePath = new ArrayList<>();
