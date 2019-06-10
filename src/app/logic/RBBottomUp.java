@@ -22,8 +22,8 @@ public class RBBottomUp extends Algorithm {
         rbSolution = new ArrayList<>();
         currentX = (int) (Math.random()*maze.getDimX());
         currentY = (int) (Math.random()*maze.getDimY());
-        startingCell = maze.getTile(0,0);
-        endingCell = maze.getTile(maze.getDimX()-1, maze.getDimY()-1);
+        startingCell = maze.getCell(0,0);
+        endingCell = maze.getCell(maze.getDimX()-1, maze.getDimY()-1);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class RBBottomUp extends Algorithm {
         // Run Prim's algorithm to finish the maze.
         do{
             // Track visited
-            if(!maze.getTile(currentX, currentY).isVisited())
+            if(!maze.getCell(currentX, currentY).isVisited())
                 maze.setVisited(currentX, currentY);
 
             // Add neighbours of the current cell to the frontiers.
@@ -64,7 +64,7 @@ public class RBBottomUp extends Algorithm {
             neighbour = Method.getRandom(neighbourCells);
 
             // Break down wall and track the operation
-            maze.breakDownWall(maze.getTile(neighbour.getXCoordinate(), neighbour.getYCoordinate()), nextCell);
+            maze.breakDownWall(maze.getCell(neighbour.getXCoordinate(), neighbour.getYCoordinate()), nextCell);
             opTracker.add(new KnockDownWall(neighbour.getXCoordinate(), neighbour.getYCoordinate(), nextCell.getXCoordinate(), nextCell.getYCoordinate()));
 
             // Set next cell to current cell
@@ -90,7 +90,7 @@ public class RBBottomUp extends Algorithm {
 
 
     private boolean calculateSolution(Cell prevCell, Cell curCell, Maze maze){
-        rbSolution.add(maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate()));
+        rbSolution.add(maze.getCell(curCell.getXCoordinate(), curCell.getYCoordinate()));
         //System.out.println("Adding " + "(" + curCell.getXCoordinate() +", " + curCell.getYCoordinate() + ")");
 
         // Check if we are done
@@ -100,12 +100,12 @@ public class RBBottomUp extends Algorithm {
 
         for (Cell next : maze.getPossiblePaths
                 (
-                        prevCell == null ? null : maze.getTile(prevCell.getXCoordinate(), prevCell.getYCoordinate()),
-                        maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate())
+                        prevCell == null ? null : maze.getCell(prevCell.getXCoordinate(), prevCell.getYCoordinate()),
+                        maze.getCell(curCell.getXCoordinate(), curCell.getYCoordinate())
                 )
         )
         {
-            if(calculateSolution(maze.getTile(curCell.getXCoordinate(), curCell.getYCoordinate()), next, maze))
+            if(calculateSolution(maze.getCell(curCell.getXCoordinate(), curCell.getYCoordinate()), next, maze))
                 return true;
         }
 
@@ -126,10 +126,10 @@ public class RBBottomUp extends Algorithm {
         int index = 1;
 
         while(index < solutionPath.size()){
-            frontiers.remove(maze.getTile(currentCell.getXCoordinate(), currentCell.getYCoordinate()));
+            frontiers.remove(maze.getCell(currentCell.getXCoordinate(), currentCell.getYCoordinate()));
             nextCell = solutionPath.get(index);
 
-            maze.breakDownWall(maze.getTile(currentCell.getXCoordinate(), currentCell.getYCoordinate()), maze.getTile(nextCell.getXCoordinate(), nextCell.getYCoordinate()));
+            maze.breakDownWall(maze.getCell(currentCell.getXCoordinate(), currentCell.getYCoordinate()), maze.getCell(nextCell.getXCoordinate(), nextCell.getYCoordinate()));
             opTracker.add(new KnockDownWall(currentCell.getXCoordinate(), currentCell.getYCoordinate(), nextCell.getXCoordinate(), nextCell.getYCoordinate()));
             addFrontiers(nextCell.getXCoordinate(), nextCell.getYCoordinate());
             maze.setVisited(nextCell.getXCoordinate(), nextCell.getYCoordinate());
@@ -138,7 +138,7 @@ public class RBBottomUp extends Algorithm {
             index++;
 
         }
-        frontiers.remove(maze.getTile(currentCell.getXCoordinate(), currentCell.getYCoordinate()));
+        frontiers.remove(maze.getCell(currentCell.getXCoordinate(), currentCell.getYCoordinate()));
         currentX = currentCell.getXCoordinate();
         currentY = currentCell.getYCoordinate();
     }

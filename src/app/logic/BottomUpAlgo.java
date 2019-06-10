@@ -2,13 +2,11 @@ package app.logic;
 
 import app.logic.Tracking.KnockDownWall;
 import app.logic.Tracking.OperationTracker;
-import app.logic.Tracking.UnMark;
 import app.logic.domain.Cell;
 import app.logic.domain.Maze;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Stack;
 
 class BottomUpAlgo extends Algorithm {
     // This algorithm takes a random walk from the starting point to the ending point of the maze to create the solution,
@@ -19,7 +17,6 @@ class BottomUpAlgo extends Algorithm {
     private ArrayList<Cell> frontiers;
 
     BottomUpAlgo(Maze maze){
-        System.gc();
         this.maze = maze;
         opTracker = new OperationTracker();
         frontiers = new ArrayList<>();
@@ -30,7 +27,8 @@ class BottomUpAlgo extends Algorithm {
     void runBottomUpAlgo(){
         ArrayList<Cell> neighbourCells;
         // Set the ending cell as visited.
-        Cell start = new Cell(currentX, currentY), nextCell, neighbour;
+        Cell start = new Cell(currentX, currentY);
+        Cell nextCell, neighbour;
         maze.setVisited(maze.getDimX()-1, maze.getDimY()-1);
 
         // Do random walk to create a solution.
@@ -42,7 +40,7 @@ class BottomUpAlgo extends Algorithm {
         // Run Prim's algorithm to finish the maze.
         do{
             // Track visited
-            if(!maze.getTile(currentX, currentY).isVisited())
+            if(!maze.getCell(currentX, currentY).isVisited())
                 maze.setVisited(currentX, currentY);
 
             // Add neighbours of the current cell to the frontiers.
@@ -61,7 +59,7 @@ class BottomUpAlgo extends Algorithm {
             neighbour = Method.getRandom(neighbourCells);
 
             // Break down wall and track the operation
-            maze.breakDownWall(maze.getTile(neighbour.getXCoordinate(), neighbour.getYCoordinate()), nextCell);
+            maze.breakDownWall(maze.getCell(neighbour.getXCoordinate(), neighbour.getYCoordinate()), nextCell);
             opTracker.add(new KnockDownWall(neighbour.getXCoordinate(), neighbour.getYCoordinate(), nextCell.getXCoordinate(), nextCell.getYCoordinate()));
 
             // Set next cell to current cell
@@ -69,7 +67,6 @@ class BottomUpAlgo extends Algorithm {
             currentY = nextCell.getYCoordinate();
         } while(true);
         frontiers = null;
-        System.gc();
     }
 
     OperationTracker getOpTracker() {
@@ -78,7 +75,11 @@ class BottomUpAlgo extends Algorithm {
 
 
     private void addWalkToMaze(HashMap<Cell, Cell> walk, Cell startingCell) {
-        Cell nextCell, currentCell = startingCell;
+        Cell nextCell;
+        Cell currentCell = startingCell;
+        // Visit the first cell and add frontiers
+        maze.setVisited(currentCell.getXCoordinate(), currentCell.getYCoordinate());
+        addFrontiers(currentCell.getXCoordinate(), currentCell.getYCoordinate());
         do {
             frontiers.remove(currentCell);
             //System.out.println("Removing (" + currentCell.getXCoordinate() + ", " + currentCell.getYCoordinate() + ")");
@@ -103,8 +104,8 @@ class BottomUpAlgo extends Algorithm {
     private void addFrontiers(int currentX, int currentY){
         ArrayList<Cell> neighbours = maze.getPossibleNeighbours(currentX, currentY);
         for (Cell cell : neighbours){
-            if (!frontiers.contains(cell)) {
-                frontiers.add(cell);
+            if (!frontiers.contains(maze.getCell(cell.getXCoordinate(), cell.getYCoordinate()))) {
+                frontiers.add(maze.getCell(cell.getXCoordinate(), cell.getYCoordinate()));
                 //System.out.println("Adding (" + cell.getXCoordinate() + ", " + cell.getYCoordinate() + ")");
             }
         }

@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -33,7 +32,6 @@ import static javafx.collections.FXCollections.observableArrayList;
 
 public class ControllerGenerator {
 
-    @FXML MenuItem generateTests, saveMaze, menuitemclose, menuitemabout;
     @FXML Button btnGenerate, btnSolution;
     @FXML Label labelDeadEnd, labelLength, labelRiver, labelTurn;
     @FXML ChoiceBox<String> choiceAlgorithms;
@@ -45,6 +43,7 @@ public class ControllerGenerator {
     private double strokeFactor = 2;
     private int currentX = -1, currentY = -1;
     private Algorithm algo = new Algorithm();
+    private TestGenerator testGenerator = new TestGenerator();
     private ArrayList<Cell> mazeSolution;
     private int dimX = 0, dimY = 0, imageCount = 1;
 
@@ -60,18 +59,27 @@ public class ControllerGenerator {
 
     @FXML
     public void initialize(){
-        choiceAlgorithms.setItems(observableArrayList("Recursive Backtracking Algorithm", "Prim's Algorithm", "Wilson's Algorithm", "Random Algo", "Bottom up Algo", "RB Bottom Up Algo"));
+        choiceAlgorithms.setItems(observableArrayList("Recursive Backtracking Algorithm", "Prim's Algorithm", "Wilson's Algorithm", "Random Choice", "Bottom Up", "RB Bottom Up"));
         choiceSize.setItems(observableArrayList("3", "5", "10", "15", "20", "25", "50", "60", "70", "80", "90", "100"));
         btnSolution.setVisible(false);
+        gc = canvas.getGraphicsContext2D();
+        initialiseMaze(15, canvas.getHeight()/15);
     }
 
     @FXML
-    public void generateTests(){
-        TestGenerator testGenerator = new TestGenerator();
-
+    public void generatePropertyTests(){
         try {
-            testGenerator.generateTests();
+            testGenerator.generatePropertyTests();
         } catch (SolutionException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void generateTimeTests(){
+        try {
+            testGenerator.generateTimeTests();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -88,7 +96,7 @@ public class ControllerGenerator {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
             imageCount++;
         } catch (IOException e) {
-            AlertBox.display("Error", "The maze could not be saved.");
+            AlertBox.display("Error", "The maze could not be saved.", 200);
         }
     }
 
@@ -100,7 +108,13 @@ public class ControllerGenerator {
 
     @FXML
     public void about(){
-        AlertBox.display("Warning", "Not Implemented yet.");
+        AlertBox.display("About", "This application generates perfect mazes.\n\n" +
+                "You can choose, which algorithm and the size of the maze you wish, in the right column and press the Generate maze button, " +
+                "to see the maze being generated on the canvas.\n\n" +
+                "Furthermore, you are able to see the values of the properties under the Generate maze button and press the Show solution button, " +
+                "to see the solution of the generated maze on the canvas.\n\n" +
+                "If you wish to close the program, you can do so by either pressing the small red cross in the top left/right corner of the window," +
+                " or by going under File in the menu bar and pressing the option Close.", 400);
     }
 
 
@@ -109,7 +123,6 @@ public class ControllerGenerator {
 
     @FXML
     public void generate(){
-        System.gc();
         btnGenerate.setDisable(true);
         choiceAlgorithms.setDisable(true);
         choiceSize.setDisable(true);
@@ -122,7 +135,11 @@ public class ControllerGenerator {
             gc = canvas.getGraphicsContext2D();
             conversion = (int) canvas.getHeight()/dimX;
         } catch (Exception e ){
-            AlertBox.display("Warning", "You haven't chosen a dimension or an algorithm yet.");
+            AlertBox.display("Warning", "You haven't chosen a dimension or an algorithm yet.", 200);
+            btnGenerate.setDisable(false);
+            choiceAlgorithms.setDisable(false);
+            choiceSize.setDisable(false);
+            return;
         }
 
         // Clear canvas of any previously drawings
@@ -158,14 +175,22 @@ public class ControllerGenerator {
             };
             myTimer.scheduleAtFixedRate(myTask, 0L, (int)(1000L*dimX/operations.size()));
         }catch (Exception e) {
-            AlertBox.display("Warning", "Something went wrong in the generation of the maze.");
+            AlertBox.display("Warning", "Something went wrong in the generation of the maze.", 200);
+            btnGenerate.setDisable(false);
+            choiceAlgorithms.setDisable(false);
+            choiceSize.setDisable(false);
+            return;
         }
 
         // Calculate solution to the maze and the properties
         try {
             mazeSolution = algo.getSolution();
         } catch (SolutionException e){
-            AlertBox.display("Warning", "The solution could not be found.");
+            AlertBox.display("Warning", "The solution could not be found.", 200);
+            btnGenerate.setDisable(false);
+            choiceAlgorithms.setDisable(false);
+            choiceSize.setDisable(false);
+            return;
         }
 
         labelDeadEnd.setText(String.valueOf( algo.getNumberOfDeadEnds() ));
@@ -264,7 +289,6 @@ public class ControllerGenerator {
 
 
     private void initialiseMaze(int dim, double conversion){
-        double height = canvas.getHeight();
         strokeFactor = conversion/25.0 > 1.5 ? conversion/25.0 : 2;
 
         gc.setStroke(Color.BLACK);
@@ -274,12 +298,12 @@ public class ControllerGenerator {
         // Draw the grid
         // Drawing the vertical lines
         for (int i = 0; i < dim+1; i++){
-            gc.strokeLine(i*conversion,0, i*conversion, dimY*conversion);
+            gc.strokeLine(i*conversion,0, i*conversion, dim*conversion);
         }
 
         // Drawing the horizontal lines
         for (int i = 0; i < dim+1; i++){
-            gc.strokeLine(0,i*conversion, dimX*conversion, i*conversion);
+            gc.strokeLine(0,i*conversion, dim*conversion, i*conversion);
         }
     }
 

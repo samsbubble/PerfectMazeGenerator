@@ -45,7 +45,7 @@ class Prim extends Algorithm{
             neighbour = Method.getRandom(neighbourCells);
 
             // Break down wall and track the operation
-            maze.breakDownWall(maze.getTile(neighbour.getXCoordinate(), neighbour.getYCoordinate()), nextCell);
+            maze.breakDownWall(maze.getCell(neighbour.getXCoordinate(), neighbour.getYCoordinate()), nextCell);
             opTracker.add(new KnockDownWall(neighbour.getXCoordinate(), neighbour.getYCoordinate(), nextCell.getXCoordinate(), nextCell.getYCoordinate()));
 
             // Set next cell to current cell

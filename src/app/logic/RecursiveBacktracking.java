@@ -34,15 +34,18 @@ public class RecursiveBacktracking extends Algorithm {
             neighbours = maze.getPossibleNeighbours(currentX, currentY);
             if(neighbours.isEmpty())
                 break;
+            if(neighbours.size() == 0)
+                break;
+
             nextCell = Method.getRandom(neighbours);
             // Break down wall and track the operation
-            maze.breakDownWall(maze.getTile(currentX, currentY), nextCell);
+            maze.breakDownWall(maze.getCell(currentX, currentY), nextCell);
             opTracker.add(new KnockDownWall(currentX, currentY, nextCell.getXCoordinate(), nextCell.getYCoordinate()));
             // Make recursive call
             runRBT(nextCell.getXCoordinate(), nextCell.getYCoordinate());
             // Track backtracking operation
             opTracker.add(new BackTrack(currentX, currentY));
         } while(true);
-        System.gc();
+        // System.gc();
     }
 }
