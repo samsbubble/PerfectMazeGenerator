@@ -1,5 +1,6 @@
-package app.logic.Tracking;
+package app.logic.tracking;
 
+// Class for saving unmarking a cell as an operation.
 public class UnMark extends Operation {
     private int xCoordinate, yCoordinate;
 
@@ -20,5 +21,4 @@ public class UnMark extends Operation {
     public String toString(){
         return "Unmarking (" + xCoordinate + "," + yCoordinate + ") from the frontiers";
     }
-
 }

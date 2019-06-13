@@ -1,11 +1,13 @@
 package app.logic;
 
-import app.logic.Tracking.*;
+import app.logic.algorithms.*;
+import app.logic.tracking.*;
 import app.logic.domain.Cell;
 import app.logic.domain.Direction;
 import app.logic.domain.Maze;
+import app.logic.domain.SolutionException;
+
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class Algorithm {
     private int dimX, dimY;
@@ -14,8 +16,10 @@ public class Algorithm {
     private ArrayList<Cell> mazeSolution;
     private Cell startingCell, endingCell;
 
+    // Empty constructor for the algorithm class.
     public Algorithm(){}
 
+    // Method setting up a initial maze and the elements the algorithm needs.
     public void generateMaze(int dimX, int dimY) {
         this.dimX = dimX;
         this.dimY = dimY;
@@ -25,10 +29,13 @@ public class Algorithm {
         endingCell = new Cell(dimX-1, dimY-1);
     }
 
+    // Method to run the specified algorithm with.
     public void runAlgorithm(String algo){
+        // Generate a random starting point.
         int currentX = (int) (Math.random() * dimX);
         int currentY = (int) (Math.random() * dimY);
 
+        // Choose the specified algorithm.
         switch (algo){
             case "Recursive Backtracking Algorithm":
                 RecursiveBacktracking rec = new RecursiveBacktracking(maze);
@@ -63,22 +70,23 @@ public class Algorithm {
         }
     }
 
+    // Method returning the operation tracker for the last algorithm run.
     public OperationTracker getOperationTracker(){
         return this.operationTracker;
     }
 
 
     // Recursive way of finding the solution.
-    /*private boolean calculateSolutionToMaze(Cell prevCell, Cell curCell){
+    private boolean calculateSolutionToMaze(Cell prevCell, Cell curCell){
+        // Add the current cell to the solution
         mazeSolution.add(maze.getCell(curCell.getXCoordinate(), curCell.getYCoordinate()));
-        //System.out.println(mazeSolution.size());
-        //System.out.println("Adding " + "(" + curCell.getXCoordinate() +", " + curCell.getYCoordinate() + ")");
 
         // Check if we are done
         if(curCell.getXCoordinate() == endingCell.getXCoordinate() && curCell.getYCoordinate() == endingCell.getYCoordinate()){
             return true;
         }
 
+        // Get the possible paths out of the cell
         for (Cell next : maze.getPossiblePaths
                 (
                         prevCell == null ? null : maze.getCell(prevCell.getXCoordinate(), prevCell.getYCoordinate()),
@@ -86,18 +94,18 @@ public class Algorithm {
                 )
             )
         {
+            // Make the recursive call with the next cell.
             if(calculateSolutionToMaze(maze.getCell(curCell.getXCoordinate(), curCell.getYCoordinate()), next))
                 return true;
         }
-
+        // Backtrack by removing the last cell in the solution.
         mazeSolution.remove(mazeSolution.size()-1);
-        //System.out.println("Removing " + "(" + curCell.getXCoordinate() +", " + curCell.getYCoordinate() + ")");
         return false;
-    }*/
+    }
 
 
     // Iterative way of finding the solution.
-    private boolean calculateSolutionToMaze(Cell startingCell){
+    /*private boolean calculateSolutionToMaze(Cell startingCell){
 
         Cell prevCell = null;
         Cell curCell = startingCell;
@@ -140,19 +148,19 @@ public class Algorithm {
 
         }
         return true;
-    }
+    }*/
 
+    // Method returning the solution as a list of cells.
     public ArrayList<Cell> getSolution() throws SolutionException {
         mazeSolution = new ArrayList<>();
-        if (calculateSolutionToMaze(startingCell)) {
-            //System.out.println(mazeSolution.size());
+        if (calculateSolutionToMaze(null, startingCell)) {
             return mazeSolution;
         } else
             throw new SolutionException("Error in solution");
     }
 
+    // Calculates the number of dead ends - cells with only one opening - three walls
     public int getNumberOfDeadEnds() {
-        // Calculate the number of dead ends - cells with only one opening - three walls
         int deadEnds = 0;
         Cell cell;
 
@@ -166,8 +174,8 @@ public class Algorithm {
         return deadEnds;
     }
 
+    // Calculates the number of rivers - cells with three/four openings - one/no wall(s)
     public int getRiverFactor() {
-        // Calculate the number of rivers - cells with three openings - one wall
         int riverFactor = 0;
         Cell cell;
 
@@ -181,14 +189,13 @@ public class Algorithm {
         return riverFactor;
     }
 
+    // Calculates the length of the solution
     public int lengthOfSolution() {
-        // Calculate the length of the solution
-        //System.out.println(mazeSolution.size());
         return mazeSolution.size();
     }
 
+    // Calculates the number of turns in the solution
     public int getNumberOfTurnsInSolution() {
-        // Calculate the number of turns in the solution
         // Direction  EAST/WEST <-> NORTH/SOUTH
         int turns = 0;
         Direction current, next;
@@ -205,6 +212,7 @@ public class Algorithm {
        return turns;
     }
 
+    // Method determining, which direction was chosen going from the current to the next cell.
     private Direction getDirection(Cell currentCell, Cell nextCell) {
         if (currentCell.getXCoordinate()-1 == nextCell.getXCoordinate()){ // Check for WEST
             return Direction.WEST;

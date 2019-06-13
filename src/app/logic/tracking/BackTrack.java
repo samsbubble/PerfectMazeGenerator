@@ -1,5 +1,7 @@
-package app.logic.Tracking;
+package app.logic.tracking;
 
+
+// Class for saving the backtrack as an operation.
 public class BackTrack extends Operation {
 
     private int xCoordinate, yCoordinate;
@@ -21,5 +23,4 @@ public class BackTrack extends Operation {
     public String toString(){
         return "Backtracking to (" + xCoordinate + "," + yCoordinate + ")";
     }
-
 }

@@ -1,33 +1,37 @@
-package app.logic;
+package app.logic.algorithms;
 
-import app.logic.Tracking.*;
+import app.logic.Algorithm;
+import app.logic.tracking.*;
 import app.logic.domain.Cell;
 import app.logic.domain.Maze;
+import app.logic.domain.Method;
 
 import java.util.ArrayList;
 
-class Prim extends Algorithm{
+public class Prim extends Algorithm {
     private OperationTracker opTracker;
     private Maze maze;
     private ArrayList<Cell> frontiers;
 
-    Prim(Maze maze){
+    // Constructor of Prim, which initialises the maze, list of frontiers and the list of operations.
+    public Prim(Maze maze){
         this.maze = maze;
         frontiers = new ArrayList<>();
         opTracker = new OperationTracker();
     }
 
-    OperationTracker getOpTracker(){
+    // Method returning the list of operations.
+    public OperationTracker getOpTracker(){
         return opTracker;
     }
 
-    void runPrim(int currentX, int currentY){
+    // Method running Prim's algorithm on the maze.
+    public void runPrim(int currentX, int currentY){
         Cell nextCell, neighbour;
         ArrayList<Cell> neighbourCells;
         do{
             // Track visited
             maze.setVisited(currentX, currentY);
-            //opTracker.add(new Visited());
 
             // Add neighbours of the current cell to the frontiers.
             addFrontiers(currentX, currentY);
@@ -41,7 +45,6 @@ class Prim extends Algorithm{
 
             // Get a random cell which is visited and a neighbour to the chosen frontier
             neighbourCells = maze.getPossibleNeighboursToFrontier(nextCell.getXCoordinate(), nextCell.getYCoordinate());
-
             neighbour = Method.getRandom(neighbourCells);
 
             // Break down wall and track the operation
@@ -57,16 +60,14 @@ class Prim extends Algorithm{
             } while(true);
         frontiers = null;
         maze = null;
-        System.gc();
     }
 
     private void addFrontiers(int currentX, int currentY){
-        ArrayList<Cell> neighbours = maze.getPossibleNeighbours(currentX, currentY);
-
+        ArrayList<Cell> neighbours = maze.getPossibleNeighbours(currentX, currentY); // Get legal neighbours
         for (Cell cell : neighbours){
             if (!frontiers.contains(cell)) {
+                // Add and track the frontiers
                 frontiers.add(cell);
-                // Track the frontiers
                 opTracker.add(new AddFrontier(cell.getXCoordinate(), cell.getYCoordinate()));
             }
         }

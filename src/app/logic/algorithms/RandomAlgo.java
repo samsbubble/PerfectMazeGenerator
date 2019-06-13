@@ -1,9 +1,11 @@
-package app.logic;
+package app.logic.algorithms;
 
-import app.logic.Tracking.KnockDownWall;
-import app.logic.Tracking.OperationTracker;
+import app.logic.Algorithm;
+import app.logic.tracking.KnockDownWall;
+import app.logic.tracking.OperationTracker;
 import app.logic.domain.Cell;
 import app.logic.domain.Maze;
+import app.logic.domain.Method;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,18 +19,21 @@ public class RandomAlgo extends Algorithm {
     private Stack<Cell> path;
     private ArrayList<Cell> frontiers;
 
-    RandomAlgo(Maze maze) {
+    // Constructor of Randcom Choice algorithm. It initialises the maze, frontiers (Prim), path (RB), and the list of operations.
+    public RandomAlgo(Maze maze) {
         opTracker = new OperationTracker();
         this.maze = maze;
         path = new Stack<>();
         frontiers = new ArrayList<>();
     }
 
-    OperationTracker getOpTracker() {
+    // Method returning the list of operations.
+    public OperationTracker getOpTracker() {
         return opTracker;
     }
 
-    void makeListOfCells() {
+    // Puts all cells of the maze in a list
+    private void makeListOfCells() {
         cells = new ArrayList<>();
         for (int i = 0; i < maze.getDimX(); i++) {
             for (int j = 0; j < maze.getDimY(); j++) {
@@ -37,22 +42,25 @@ public class RandomAlgo extends Algorithm {
         }
     }
 
-    void runRandomAlgo() {
+    // Method running Random Choice algorithm
+    public void runRandomAlgo() {
         int choice;
         makeListOfCells();
         currentX = (int) (Math.random() * maze.getDimX());
         currentY = (int) (Math.random() * maze.getDimY());
 
-        // Mark the first cell as visited
+        // Mark the first cell as visited and add the frontiers to the cell
         frontiers.add(maze.getCell(currentX, currentY));
-        //System.out.println("Adding (" + currentX + ", " + currentY + ")");
         maze.setVisited(currentX, currentY);
         addFrontiers(currentX, currentY);
+
         // Remove from cells left and add to path
         path.push(maze.getCell(currentX, currentY));
         cells.remove(maze.getCell(currentX, currentY));
 
+        // Loop continues until all cell are visited.
         while (!cells.isEmpty()) {
+            // Randomly select the next algorithm
             choice = (int) (Math.random()*3);
             switch (choice){
                 case 0:
@@ -69,35 +77,30 @@ public class RandomAlgo extends Algorithm {
                     stepWilson();
                     break;
             }
-
-            /*for(int i = 0; i < maze.getDimX()/2; i++) {
-                stepRecursiveBacktracking();
-            }
-            stepPrim();
-            stepWilson();*/
         }
+        // Remove the current cell from the frontier list.
         frontiers.remove(maze.getCell(currentX, currentY));
-        //System.out.println("Removing (" + currentX + ", " + currentY + ")");
     }
 
+    // Perform one iteration of the Recursive Backtracking algorithm.
     private void stepRecursiveBacktracking() {
         // Remove cell from frontier list
         frontiers.remove(maze.getCell(currentX, currentY));
-        //System.out.println("Removing (" + currentX + ", " + currentY + ")");
 
         // Find a neighbouring cell
         ArrayList<Cell> neighbours = maze.getPossibleNeighbours(currentX, currentY);
 
+        // If there aren't any neighbours, pop the last cell, and set the current cell to the pop off cell.
         if (neighbours.isEmpty()) {
-            //path.pop();
             Cell nextCell = path.pop();
             currentX = nextCell.getXCoordinate();
             currentY = nextCell.getYCoordinate();
             return;
         }
+        // Get a random cell from the neighbours and set it as the next cell.
         Cell nextCell = Method.getRandom(neighbours);
 
-        // Break down wall between the current and the next cell
+        // Break down wall between the current and the next cell and track the operation.
         maze.breakDownWall(maze.getCell(currentX, currentY), nextCell);
         opTracker.add(new KnockDownWall(currentX, currentY, nextCell.getXCoordinate(), nextCell.getYCoordinate()));
         maze.setVisited(nextCell.getXCoordinate(), nextCell.getYCoordinate());
@@ -112,9 +115,10 @@ public class RandomAlgo extends Algorithm {
         currentY = nextCell.getYCoordinate();
     }
 
+    // Perform one iteration of Prim's algorithm
     private void stepPrim() {
+        // Remove the current cell from the list of frontiers.
         frontiers.remove(maze.getCell(currentX, currentY));
-        //System.out.println("Removing (" + currentX + ", " + currentY + ")");
 
         // If there is no frontiers, return
         if(frontiers.isEmpty()) {
@@ -124,11 +128,9 @@ public class RandomAlgo extends Algorithm {
         // Choose next cell and remove it from frontiers
         Cell nextCell = Method.getRandom(frontiers);
         frontiers.remove(nextCell);
-        //System.out.println("Removing (" + nextCell.getXCoordinate() + ", " + nextCell.getYCoordinate() + ")");
 
-        // Get a random cell which is visited and a neighbour to the chosen frontier
+        // Get a random cell, which is visited, and a neighbour to the chosen frontier
         ArrayList<Cell> neighbourCells = maze.getPossibleNeighboursToFrontier(nextCell.getXCoordinate(), nextCell.getYCoordinate());
-
         Cell neighbour = Method.getRandom(neighbourCells);
 
         // Break down wall and track the operation
@@ -147,58 +149,69 @@ public class RandomAlgo extends Algorithm {
 
     }
 
+    // Method for adding the legal neighbour of the given cell to the list of frontiers.
     private void addFrontiers(int currentX, int currentY){
         ArrayList<Cell> neighbours = maze.getPossibleNeighbours(currentX, currentY);
         for (Cell cell : neighbours){
             if (!frontiers.contains(cell)) {
                 frontiers.add(cell);
-                //System.out.println("Adding (" + cell.getXCoordinate() + ", " + cell.getYCoordinate() + ")");
             }
         }
     }
 
+    // Perform one iteration of Wilson's algorithm.
     private void stepWilson(){
+        // Remove the current cell from the list of frontiers.
         frontiers.remove(maze.getCell(currentX, currentY));
-        //System.out.println("Removing (" + currentX + ", " + currentY + ")");
+
+        // If there are no more unvisited cells in the maze, return.
         if(cells.isEmpty())
             return;
+
+        // Get a random starting cell in the maze.
         Cell startingCell = Method.getRandomPossibleCellInMaze(maze);
 
-        // Perform walk and add it to the maze
+        // Perform the random walk
         HashMap<Cell, Cell> walk = Method.performRandomWalk(startingCell, maze);
 
+        // Set the starting cell to visited and add its legal neighbours to the list of frontiers.
         maze.setVisited(startingCell.getXCoordinate(), startingCell.getYCoordinate());
         path.push(startingCell);
         cells.remove(maze.getCell(startingCell.getXCoordinate(), startingCell.getYCoordinate()));
         addFrontiers(startingCell.getXCoordinate(), startingCell.getYCoordinate());
 
-        if(walk.isEmpty())
-            return;
-
+        // Add the walk to the maze.
         addWalkToMaze(walk, startingCell);
     }
 
+    // Method for adding the walk to the maze.
     private void addWalkToMaze(HashMap<Cell, Cell> walk, Cell startingCell) {
         Cell nextCell, currentCell = startingCell;
         do {
+            // Remove the current cell from the list of frontiers.
             frontiers.remove(currentCell);
-                //System.out.println("Removing (" + currentCell.getXCoordinate() + ", " + currentCell.getYCoordinate() + ")");
 
+            // Get the next cell from the walk
             nextCell = walk.get(currentCell);
 
+            // Break down the wall between the current and next cell, track the operation and add the frontiers to the next cell.
             maze.breakDownWall(currentCell, nextCell);
             opTracker.add(new KnockDownWall(currentCell.getXCoordinate(), currentCell.getYCoordinate(), nextCell.getXCoordinate(), nextCell.getYCoordinate()));
             addFrontiers(nextCell.getXCoordinate(), nextCell.getYCoordinate());
 
+            // If the next cell is already visited, break the loop.
             if (nextCell.isVisited())
                 break;
 
+            // Set the cell to visited
             maze.setVisited(nextCell.getXCoordinate(), nextCell.getYCoordinate());
             path.push(nextCell);
             cells.remove(maze.getCell(nextCell.getXCoordinate(), nextCell.getYCoordinate()));
 
+            // Set the current cell equal to the next cell.
             currentCell = nextCell;
         } while (true);
+        // Set the current x and y coordinates equal to the next cells coordinates.
         currentX = nextCell.getXCoordinate();
         currentY = nextCell.getYCoordinate();
     }

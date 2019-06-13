@@ -11,8 +11,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class AlertBox {
+public class PopUpWindow {
 
+    // Method making a small pop-up window with a title and a message.
     public static void display(String title, String message, int size) {
         Stage window = new Stage();
 

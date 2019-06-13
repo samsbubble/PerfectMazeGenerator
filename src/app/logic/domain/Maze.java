@@ -3,12 +3,11 @@ package app.logic.domain;
 import java.util.ArrayList;
 
 public class Maze {
-
-    // This is the structure to hold the maze
-
+    // This is the structure to hold the maze.
     private int dimX, dimY;
     private Cell[][] cells;
 
+    // Constructor of the maze object. It initialises the 2D-array of cells.
     public Maze(int dimX, int dimY){
         this.dimX = dimX;
         this.dimY = dimY;
@@ -21,22 +20,27 @@ public class Maze {
         }
     }
 
+    // Get the x dimension
     public int getDimX(){
         return dimX;
     }
 
+    // Get the y dimension
     public int getDimY(){
         return dimY;
     }
 
+    // Set a given cell to visited by calling the cell object.
     public void setVisited(int posX, int posY){
         cells[posX][posY].setVisited();
     }
 
+    // Get the cell with the given coordinates.
     public Cell getCell(int currentX, int currentY){
         return cells[currentX][currentY];
     }
 
+    // Break down the wall between the current and next cell by calling the method from the cell class on each cell.
     public void breakDownWall(Cell currentCell, Cell nextCell){
         // Check for WEST
         if (currentCell.getXCoordinate()-1 == nextCell.getXCoordinate()){
@@ -63,6 +67,7 @@ public class Maze {
         }
     }
 
+    // Method returning the legal neighbours in a list.
     public ArrayList<Cell> getPossibleNeighbours(int currentX, int currentY) {
         ArrayList<Cell> possibleNeighbours = new ArrayList<>();
         // WEST
@@ -84,6 +89,7 @@ public class Maze {
         return possibleNeighbours;
     }
 
+    // Method returning the neighbours which have already been visited in a list.
     public ArrayList<Cell> getPossibleNeighboursToFrontier(int currentX, int currentY) {
         ArrayList<Cell> possibleNeighbours = new ArrayList<>();
 
@@ -106,6 +112,7 @@ public class Maze {
         return possibleNeighbours;
     }
 
+    // Method returning all neighbours, which are within the grid of the maze.
     public ArrayList<Cell> getAllNeighbours(int currentX, int currentY) {
         ArrayList<Cell> possibleNeighbours = new ArrayList<>();
         // WEST
@@ -127,19 +134,20 @@ public class Maze {
         return possibleNeighbours;
     }
 
+    // Method returning all the possible paths except to walk to except from the cell it came from.
     public ArrayList<Cell> getPossiblePaths(Cell prevCell, Cell curCell) {
         ArrayList<Cell> possiblePath = new ArrayList<>();
 
-        if( !curCell.getWall(Direction.NORTH) && 0 <= curCell.getYCoordinate()-1){
+        if( !curCell.getValueOfWall(Direction.NORTH) && 0 <= curCell.getYCoordinate()-1){
             possiblePath.add(cells[curCell.getXCoordinate()][curCell.getYCoordinate()-1]);
         }
-        if( !curCell.getWall(Direction.SOUTH) && curCell.getYCoordinate()+1 < dimY){
+        if( !curCell.getValueOfWall(Direction.SOUTH) && curCell.getYCoordinate()+1 < dimY){
             possiblePath.add(cells[curCell.getXCoordinate()][curCell.getYCoordinate()+1]);
         }
-        if( !curCell.getWall(Direction.EAST) && curCell.getXCoordinate()+1 < dimX){
+        if( !curCell.getValueOfWall(Direction.EAST) && curCell.getXCoordinate()+1 < dimX){
             possiblePath.add(cells[curCell.getXCoordinate()+1][curCell.getYCoordinate()]);
         }
-        if( !curCell.getWall(Direction.WEST) && 0 <= curCell.getXCoordinate()-1){
+        if( !curCell.getValueOfWall(Direction.WEST) && 0 <= curCell.getXCoordinate()-1){
             possiblePath.add(cells[curCell.getXCoordinate()-1][curCell.getYCoordinate()]);
         }
         if (prevCell != null){

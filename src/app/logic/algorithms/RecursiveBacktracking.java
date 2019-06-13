@@ -1,8 +1,10 @@
-package app.logic;
+package app.logic.algorithms;
 
-import app.logic.Tracking.*;
+import app.logic.Algorithm;
+import app.logic.tracking.*;
 import app.logic.domain.Maze;
 import app.logic.domain.Cell;
+import app.logic.domain.Method;
 
 import java.util.ArrayList;
 
@@ -11,41 +13,47 @@ public class RecursiveBacktracking extends Algorithm {
     private OperationTracker opTracker;
     private Maze maze;
 
-    RecursiveBacktracking(Maze maze){
+    // Constructor of the Recursive Backtracking algorithm, which initialises the maze and the list of operations.
+    public RecursiveBacktracking(Maze maze){
         opTracker = new OperationTracker();
         this.maze = maze;
     }
 
-    OperationTracker getOpTracker(){
+    // Method for returning the list of operations.
+    public OperationTracker getOpTracker(){
         return opTracker;
     }
 
-    void runRBT(int currentX, int currentY){
+    // Method to run the Recursive Backtracking algorithm.
+    public void runRBT(int currentX, int currentY){
         // Track move
         opTracker.add(new Move(currentX, currentY));
 
-        // Track visited
+        // Set cell to visited.
         maze.setVisited(currentX, currentY);
-        //opTracker.add(new Visited());
 
         Cell nextCell;
         ArrayList<Cell> neighbours;
         do{
+            // Get the legal neighbours to the current cell
             neighbours = maze.getPossibleNeighbours(currentX, currentY);
+
+            // If there aren't any neighbours, the maze is complete.
             if(neighbours.isEmpty())
                 break;
-            if(neighbours.size() == 0)
-                break;
 
+            // Get the next cell from the list of neighbours.
             nextCell = Method.getRandom(neighbours);
-            // Break down wall and track the operation
+
+            // Break down the wall between the current and next cell and track the operation.
             maze.breakDownWall(maze.getCell(currentX, currentY), nextCell);
             opTracker.add(new KnockDownWall(currentX, currentY, nextCell.getXCoordinate(), nextCell.getYCoordinate()));
+
             // Make recursive call
             runRBT(nextCell.getXCoordinate(), nextCell.getYCoordinate());
+
             // Track backtracking operation
             opTracker.add(new BackTrack(currentX, currentY));
         } while(true);
-        // System.gc();
     }
 }

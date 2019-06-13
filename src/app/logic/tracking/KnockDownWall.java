@@ -1,8 +1,9 @@
-package app.logic.Tracking;
+package app.logic.tracking;
 
 import app.logic.domain.Cell;
 import app.logic.domain.Direction;
 
+// Class for saving knocking down a wall as an operation.
 public class KnockDownWall extends Operation {
 
     private Direction wall;
@@ -33,17 +34,8 @@ public class KnockDownWall extends Operation {
         return current.getYCoordinate();
     }
 
-    public int getNextX(){
-        return next.getXCoordinate();
-    }
-
-    public int getNextY(){
-        return next.getXCoordinate();
-    }
-
     @Override
     public String toString(){
         return "Knock down " + wall + " wall (" + current.getXCoordinate()+"," + current.getYCoordinate()+") to ("+next.getYCoordinate()+","+next.getYCoordinate()+")";
     }
-
 }

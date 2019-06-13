@@ -1,10 +1,11 @@
-package app.logic.Tracking;
+package app.logic.tracking;
 
-public class Move extends Operation {
 
+// Class for saving a frontier as an operation.
+public class AddFrontier extends Operation {
     private int xCoordinate, yCoordinate;
 
-    public Move(int xCoordinate, int yCoordinate){
+    public AddFrontier(int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
     }
@@ -19,6 +20,6 @@ public class Move extends Operation {
 
     @Override
     public String toString(){
-        return "Moving to (" + xCoordinate + "," + yCoordinate + ")";
+        return "Adding frontier (" + xCoordinate + "," + yCoordinate + ")";
     }
 }
