@@ -24,6 +24,8 @@ To run the code it is required to have the following programs and libraries inst
 - Numpy library for Python
 - Matlibplot library for Python
 
+The development was done on Mac OS.
+
 ## Usage of the program
 The program is run by opening the project in a Java IDE of your choice. Build and run the project and the program will be displayed.
 
