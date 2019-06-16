@@ -14,7 +14,7 @@ fig = plt.figure()
 
 # Pull data from the 5 (6) files
 i = 0
-for filename in ('../tests/RecursiveBacktracking.txt', '../tests/Prim.txt', '../tests/Wilson.txt', '../tests/Random.txt', '../tests/BottomUp.txt'):
+for filename in ("../tests/property/Recursive Backtracking Algorithm.txt", "../tests/property/Prim's Algorithm.txt", "../tests/property/Wilson's Algorithm.txt", "../tests/property/Random Choice.txt", "../tests/property/Bottom Up.txt"):
     with open(filename, 'r') as f:
         lines = [[int(num) for num in line.split(' ')] for line in f]
         #print(lines)

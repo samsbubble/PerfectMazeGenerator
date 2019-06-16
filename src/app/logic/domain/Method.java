@@ -1,7 +1,6 @@
 package app.logic.domain;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 
 // Helper class with frequently used methods.
@@ -14,17 +13,6 @@ public class Method {
         }
         int index = (int) (Math.random() * neighbours.size());
         return neighbours.get(index);
-    }
-
-    // Method returning a unvisited cell from the list.
-    public static Cell getRandomPossibleCellInMaze(Maze maze) {
-        for(int i = 0; i < maze.getDimX(); i++){
-            for(int j = 0; j < maze.getDimY(); j++){
-                if (!maze.getCell(i, j).isVisited())
-                    return maze.getCell(i, j);
-            }
-        }
-        return null;
     }
 
     // Method performing a random walk in the given maze from a given starting cell.

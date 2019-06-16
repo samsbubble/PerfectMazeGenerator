@@ -178,7 +178,7 @@ public class ControllerGenerator {
                     eventIndex++;
                 }
             };
-            myTimer.scheduleAtFixedRate(myTask, 0L, (int)(1000L*dimX/operations.size()));
+            myTimer.scheduleAtFixedRate(myTask, 0L, (int)(1000L*dimX/operations.size()/2));
         }catch (Exception e) {
             PopUpWindow.display("Warning", "Something went wrong in the generation of the maze.", 200);
             btnGenerate.setDisable(false);

@@ -1,7 +1,7 @@
 import numpy as np
 import pylab as plt
 
-with open('../tests/RecursiveBacktracking.txt', 'r') as f:
+with open("../tests/property/Recursive Backtracking Algorithm.txt", 'r') as f:
     linesRB = [[int(num) for num in line.split(' ')] for line in f]
 
 max_values_RB = np.max(linesRB, axis=0)
@@ -16,7 +16,7 @@ print("RB% : Dead ends = " + repr((avg_values_RB[0]/2500)*100) +
            " Turns = " + repr((avg_values_RB[3]/avg_values_RB[2])*100))
 
 
-with open('../tests/Prim.txt', 'r') as f:
+with open("../tests/property/Prim's Algorithm.txt", 'r') as f:
     linesPrim = [[int(num) for num in line.split(' ')] for line in f]
 
 max_values_Prim = np.max(linesPrim, axis=0)
@@ -31,7 +31,7 @@ print("Prim% : Dead ends = " + repr((avg_values_Prim[0]/2500)*100) +
            " Turns = " + repr((avg_values_Prim[3]/avg_values_Prim[2])*100))
 
 
-with open('../tests/Wilson.txt', 'r') as f:
+with open("../tests/property/Wilson's Algorithm.txt", 'r') as f:
     linesWilson = [[int(num) for num in line.split(' ')] for line in f]
 
 max_values_Wilson = np.max(linesWilson, axis=0)
@@ -46,7 +46,7 @@ print("Wilson% : Dead ends = " + repr((avg_values_Wilson[0]/2500)*100) +
            " Turns = " + repr((avg_values_Wilson[3]/avg_values_Wilson[2])*100))
 
 
-with open('../tests/Random.txt', 'r') as f:
+with open("../tests/property/Random Choice.txt", 'r') as f:
     linesRandom = [[int(num) for num in line.split(' ')] for line in f]
 
 max_values_Random = np.max(linesRandom, axis=0)
@@ -61,7 +61,7 @@ print("Random% : Dead ends = " + repr((avg_values_Random[0]/2500)*100) +
            " Turns = " + repr((avg_values_Random[3]/avg_values_Random[2])*100))
 
 
-with open('../tests/BottomUp.txt', 'r') as f:
+with open("../tests/property/Bottom Up.txt", 'r') as f:
     linesBUP = [[int(num) for num in line.split(' ')] for line in f]
 
 max_values_BUP = np.max(linesBUP, axis=0)
@@ -77,7 +77,7 @@ print("Bottom Up% : Dead ends = " + repr((avg_values_BUP[0]/2500)*100) +
 
 
 
-with open('../tests/RBBottomUp.txt', 'r') as f:
+with open("../tests/property/RB Bottom Up.txt", 'r') as f:
     linesRBBUP = [[int(num) for num in line.split(' ')] for line in f]
 
 max_values_RBBUP = np.max(linesRBBUP, axis=0)

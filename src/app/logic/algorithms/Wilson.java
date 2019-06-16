@@ -6,6 +6,7 @@ import app.logic.domain.Cell;
 import app.logic.domain.Maze;
 import app.logic.domain.Method;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -13,13 +14,24 @@ public class Wilson {
 
     private OperationTracker opTracker;
     private Maze maze;
-    private int remainingCells;
+    private ArrayList<Cell> remainingCells;
 
     // Constructor for Wilson's algorithm, which initialises the maze, the number of remaining cells and the list of operations.
     public Wilson(Maze maze){
         this.maze = maze;
         opTracker = new OperationTracker();
-        remainingCells = maze.getDimX()*maze.getDimY();
+        remainingCells = getAllCells();
+    }
+
+    // Method returning all cells of the maze.
+    private ArrayList<Cell> getAllCells(){
+        ArrayList<Cell> cells = new ArrayList<>();
+        for(int i = 0; i < maze.getDimX(); i++){
+            for(int j = 0; j < maze.getDimY(); j++){
+                cells.add(maze.getCell(i,j));
+            }
+        }
+        return cells;
     }
 
     // Method, which return the list of operations.
@@ -32,14 +44,14 @@ public class Wilson {
         Cell startingCell;
         HashMap<Cell, Cell> walk;
 
-        // Set the current cell to visited and count down the number of remaining cells.
+        // Set the current cell to visited and remove the cell from the remaining cells.
         maze.setVisited(currentX, currentY);
-        remainingCells--;
+        remainingCells.remove(maze.getCell(currentX, currentY));
 
         // While there are still remaining cells left in the maze.
-        while (remainingCells > 0) {
+        while (remainingCells.size() > 0) {
             // Find a random legal cell in the maze.
-            startingCell = Method.getRandomPossibleCellInMaze(maze);
+            startingCell = Method.getRandom(remainingCells);
 
             // Perform a random walk from the cell until reaching a already visited cell.
             walk = Method.performRandomWalk(startingCell, maze);
@@ -56,7 +68,8 @@ public class Wilson {
         currentCell = startingCell;
         do {
             // Count down the remaining cells and set the current cell to visited.
-            remainingCells--;
+            remainingCells.remove(currentCell);
+
             maze.setVisited(currentCell.getXCoordinate(), currentCell.getYCoordinate());
 
             // Get the next cell from the walk.

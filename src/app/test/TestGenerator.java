@@ -49,11 +49,12 @@ public class TestGenerator {
     // All times are save in one .txt file pr algorithm and saved under tests/time/ .
     public void generateTimeTests() throws IOException {
         Algorithm algorithm = new Algorithm();
-        String[] algorithms = new String[]{"Recursive Backtracking Algorithm", "Prim's Algorithm", "Wilson's Algorithm", "Random Choice", "Bottom Up", "RB Bottom Up"};
+        //String[] algorithms = new String[]{"Recursive Backtracking Algorithm", "Prim's Algorithm", "Wilson's Algorithm", "Random Choice", "Bottom Up", "RB Bottom Up"};
+        String[] algorithms = new String[]{"Random Choice", "Wilson's Algorithm"};
         System.out.println("Tests starting...");
 
-        int[] sizes = new int[]       {  10,   15,   20,   25,   30,   35,   40,  50,  60,  70,  80,  90, 100, 120, 140, 160, 180, 200, 220, 250, 280, 320, 360, 400, 450};
-        int[] noIterations = new int[]{1000, 1000, 1000, 1000, 1000, 1000, 1000, 400, 400, 400, 300, 300, 300, 300, 200, 200, 100,  50,  50,  50,  25,  25,  20,  20,  10};
+        int[] sizes = new int[]       {   10,    15,    20,    25,    30,    35,    40,   50,   60,   70,  80,  90, 100, 120, 140, 160, 180, 200, 220, 250, 280, 320, 360, 400, 450};
+        int[] noIterations = new int[]{10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000, 1000, 1000, 800, 800, 800, 600, 600, 600, 500, 500, 400, 400, 100, 100,  50,  50,  50};
 
         for(int j = 0; j < algorithms.length; j++) {
             ArrayList<String> lines = new ArrayList<String>();
@@ -74,7 +75,14 @@ public class TestGenerator {
             algorithm.runAlgorithm(nameOfAlgo);
         }
         long time = (System.nanoTime() - start)/noIteration;
-        double elapsedTimeInSecond = (double) time * 1e-9;
+
+        long start2 = System.nanoTime();
+        for(int i=0; i < noIteration; i++){
+            algorithm.generateMaze(dimension, dimension);
+        }
+        long time2 = time - (System.nanoTime()-start2)/noIteration;
+
+        double elapsedTimeInSecond = (double) time2 * 1e-9;
         System.out.println("Each " + nameOfAlgo + " run took an average of " + elapsedTimeInSecond + " seconds for (" + dimension + "x" + dimension +")");
         return "" + elapsedTimeInSecond;
     }

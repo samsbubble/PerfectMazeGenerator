@@ -107,7 +107,7 @@ public class RandomAlgo extends Algorithm {
 
         // Add neighbours to the frontiers
         addFrontiers(nextCell.getXCoordinate(), nextCell.getYCoordinate());
-        path.push(maze.getCell(nextCell.getXCoordinate(), nextCell.getYCoordinate()));
+        path.push(nextCell);
         cells.remove(nextCell);
 
         // Set next cell to be the current cell
@@ -169,7 +169,7 @@ public class RandomAlgo extends Algorithm {
             return;
 
         // Get a random starting cell in the maze.
-        Cell startingCell = Method.getRandomPossibleCellInMaze(maze);
+        Cell startingCell = Method.getRandom(cells);
 
         // Perform the random walk
         HashMap<Cell, Cell> walk = Method.performRandomWalk(startingCell, maze);
@@ -177,7 +177,7 @@ public class RandomAlgo extends Algorithm {
         // Set the starting cell to visited and add its legal neighbours to the list of frontiers.
         maze.setVisited(startingCell.getXCoordinate(), startingCell.getYCoordinate());
         path.push(startingCell);
-        cells.remove(maze.getCell(startingCell.getXCoordinate(), startingCell.getYCoordinate()));
+        cells.remove(startingCell);
         addFrontiers(startingCell.getXCoordinate(), startingCell.getYCoordinate());
 
         // Add the walk to the maze.
@@ -206,7 +206,7 @@ public class RandomAlgo extends Algorithm {
             // Set the cell to visited
             maze.setVisited(nextCell.getXCoordinate(), nextCell.getYCoordinate());
             path.push(nextCell);
-            cells.remove(maze.getCell(nextCell.getXCoordinate(), nextCell.getYCoordinate()));
+            cells.remove(nextCell);
 
             // Set the current cell equal to the next cell.
             currentCell = nextCell;
