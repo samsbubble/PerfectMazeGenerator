@@ -1,6 +1,10 @@
 import numpy as np
 import pylab as plt
 
+# Script plotting four subplots for each of the four properties. A box plot
+# is made where the minimum, average, and maximum value are plotted for all 6 algorithms.
+
+# Load data
 with open("../tests/property/Recursive Backtracking Algorithm.txt", 'r') as f:
     linesRB = [[int(num) for num in line.split(' ')] for line in f]
 
@@ -99,13 +103,11 @@ print("RB Bottom Up% : Dead ends = " + repr((avg_values_RBBUP[0]/2500)*100) +
 fig = plt.figure()
 fig.set_size_inches(10, 7)
 
+# Set properties for the plot.
 n_groups = 6
 index = np.arange(n_groups)
 bar_width = 0.4
 opacity = 0.8
-
-
-
 
 # Dead ends
 subplot1 = plt.subplot(221)
@@ -114,8 +116,6 @@ plt.xlabel('Algorithm')
 plt.ylabel('Cell')
 plt.title('Dead Ends')
 plt.yticks(index+1, ('RB', 'P', 'W', 'RC', 'BU', 'RBBU'))
-
-# ('RB\n' + repr(means_deadEnds[0]), 'P\n' + repr(means_deadEnds[1]), 'W\n' + repr(means_deadEnds[2]), 'RC\n' + repr(means_deadEnds[3]), 'BU\n' + repr(means_deadEnds[4])))
 
 # Rivers
 plt.subplot(222)

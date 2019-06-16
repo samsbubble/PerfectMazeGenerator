@@ -6,12 +6,12 @@ means_rivers = []
 means_length = []
 means_turns = []
 
-# Make a plot for each of the properties
+# Script make a plot containing four subplots for the four properties. The algorithms being
+# tested are the Recursive Backtracking algorithm, Prim's algorithm, and Wilson's algorithm.
 fig = plt.figure()
-#plt.suptitle("Properties for the Algorithms")
 
 
-# Pull data from the 5 (6) files
+# Pull data from the 3 files
 i = 0
 for filename in ("../tests/property/Recursive Backtracking Algorithm.txt", "../tests/property/Prim's Algorithm.txt", "../tests/property/Wilson's Algorithm.txt"):
     with open(filename, 'r') as f:
@@ -25,7 +25,7 @@ for filename in ("../tests/property/Recursive Backtracking Algorithm.txt", "../t
     means_turns.append(means[3])
     i = i+1
 
-# data to plot
+# Set properties for the plot
 n_groups = 3
 index = np.arange(n_groups)
 bar_width = 0.4
@@ -38,7 +38,6 @@ plt.xlabel('Algorithm')
 plt.ylabel('Cell')
 plt.title('Dead Ends')
 plt.xticks(index, ('RB', 'P', 'W'))
-
 
 # Rivers
 plt.subplot(222)

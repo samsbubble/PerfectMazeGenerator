@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Script creating a plot showing the time measurements compared to the theoretical time complexity curves.
+
 space = np.array([10,   15,  20,  25,  30,  35,  40,  50,  60,  70,  80,  90, 100, 120, 140, 160, 180, 200, 220, 250, 280, 320, 360, 400, 450])
 space = space**2
 
