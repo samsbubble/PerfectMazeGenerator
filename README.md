@@ -38,6 +38,7 @@ All experiments are made in Python. The experiment folder can be opened in your 
 
 ## Author
 Sarah Alexandra Maria Van Dam
+
 Student number: s153659 at the Technical University of Denmark
 
 ## Supervisors
