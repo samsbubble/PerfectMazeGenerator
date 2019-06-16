@@ -35,3 +35,12 @@ The program can generate mazes and show their solution, when an algorithm and si
 
 ## Running the experiments 
 All experiments are made in Python. The experiment folder can be opened in your IDE for python of choice. All the experiment files generates images, which are saved in the images folder within the experiment folder.
+
+## Author
+Sarah Alexandra Maria Van Dam
+Student number: s153659 at the Technical University of Denmark
+
+## Supervisors
+Prof. Inge Li Gørtz and Prof. Philip Bille
+
+
