@@ -24,7 +24,8 @@ To run the code it is required to have the following programs and libraries inst
 - NumPy library for Python (version 1.8.0rc1)
 - Matplotlib library for Python (version 1.3.1)
 
-The development was done on Mac OS Mojave (version 10.14.5). Processor: 2,9 GHz Intel Core i9 with 6 cores. Memory: 32 GB 2400 MHz DDR4.
+The development was done on Mac OS Mojave (version 10.14.5).
+Processor: 2,9 GHz Intel Core i9 with 6 cores. Memory: 32 GB 2400 MHz DDR4.
 
 ## Usage of the program
 The program is run by opening the project in a Java IDE of your choice. Build and run the project and the program will be displayed.
