@@ -19,19 +19,19 @@ The thesis is submitted as a bachelor thesis at the institute DTU Compute at the
 
 ## Prerequisites and libraries
 To run the code it is required to have the following programs and libraries installed:
-- Java 12 Runtime Environment
-- Python 3.7.2
-- Numpy library for Python
-- Matlibplot library for Python
+- Java 12 Runtime Environment (openjdk version "12.0.1")
+- Python 2.7.10
+- NumPy library for Python (version 1.8.0rc1)
+- Matplotlib library for Python (version 1.3.1)
 
-The development was done on Mac OS.
+The development was done on Mac OS Mojave (version 10.14.5). Processor: 2,9 GHz Intel Core i9 with 6 cores. Memory: 32 GB 2400 MHz DDR4.
 
 ## Usage of the program
 The program is run by opening the project in a Java IDE of your choice. Build and run the project and the program will be displayed.
 
-How to use the program in detail can be found in the report, but there is a small guide, when pressing the "Help" -> "About" in the menu bar. This will display a small pop-up window with details of the different functions of the program. 
+How to use the program in detail can be found in the report, but there is a small guide, when pressing "Help" -> "About" in the menu bar. There will be displayed a small pop-up window with details of the different functionalities of the program. 
 
-The program can generate mazes and show their solution, when an algorithm and size of the maze is chosen.
+The program can generate mazes by choosing an algorithm and size of the maze. When a maze has been generating, a solution to the maze can be shown.
 
 ## Running the experiments 
 All experiments are made in Python. The experiment folder can be opened in your IDE for python of choice. All the experiment files generates images, which are saved in the images folder within the experiment folder.
