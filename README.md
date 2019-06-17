@@ -20,6 +20,7 @@ The thesis is submitted as a bachelor thesis at the institute DTU Compute at the
 ## Prerequisites and libraries
 To run the code it is required to have the following programs and libraries installed:
 - Java 12 Runtime Environment (openjdk version "12.0.1")
+- JavaFX 12 (version 12.0.1+2)
 - Python 2.7.10
 - NumPy library for Python (version 1.8.0rc1)
 - Matplotlib library for Python (version 1.3.1)
