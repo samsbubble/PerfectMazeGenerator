@@ -61,7 +61,7 @@ plt.subplot(224)
 plot4 = plt.bar(index, means_turns, bar_width, alpha=opacity,color=['magenta', 'purple', 'blue', 'cyan', 'lime', 'red'],edgecolor='black',label='Turns on the Solution')
 plt.xlabel('Algorithm')
 plt.ylabel('Cell')
-plt.title('Turns on the Solution')
+plt.title('Turns in the Solution')
 plt.xticks(index, ('RB', 'P', 'W', 'RC', 'BU', 'RBBU'))
 
 plt.show()

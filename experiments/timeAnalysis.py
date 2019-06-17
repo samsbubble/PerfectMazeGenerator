@@ -37,9 +37,9 @@ teoreticaln = plt.loglog(space, 10**(-6.4)*space, 'k-', label='Teoretical O(n)',
 teoreticaln2 = plt.loglog(space, 10**(-8.3)*(space**2), 'k--', label='Teoretical O(n^2)', linewidth=3.0)
 teoreticaln3 = plt.loglog(space, 10**(-10.3)*(space**3), 'k:', label='Teoretical O(n^3)', linewidth=3.0)
 
-plt.ylabel('Time pr run (average)')
-plt.xlabel('Size of maze')
-plt.title('Time pr run for different sizes of mazes')
+plt.ylabel('Time pr generation (average)')
+plt.xlabel('Size of maze (number of cells)')
+plt.title('Time pr generation for different sizes of mazes')
 plt.legend(loc='upper left')
 plt.show()
 fig.savefig('images/runTimeOverSpace.png')

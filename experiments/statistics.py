@@ -138,7 +138,7 @@ plt.subplot(224)
 plot4 = plt.boxplot(turns, vert=0)
 plt.xlabel('Algorithm')
 plt.ylabel('Cell')
-plt.title('Turns on the Solution')
+plt.title('Turns in the Solution')
 plt.yticks(index+1, ('RB', 'P', 'W', 'RC', 'BU', 'RBBU'))
 
 plt.show()
